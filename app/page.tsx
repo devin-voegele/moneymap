@@ -259,8 +259,9 @@ export default function LandingPage() {
             </CardContent>
           </Card>
 
-          <Card className="bg-gradient-to-br from-blue-500/20 to-purple-500/20 border-blue-500">
-            <CardHeader>
+          <Card className="border-blue-500 bg-slate-900/90 relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-purple-500/20 -z-10"></div>
+            <CardHeader className="bg-transparent">
               <CardTitle className="text-white text-2xl">Pro</CardTitle>
               <CardDescription className="text-slate-300">
                 For serious money management
@@ -276,7 +277,7 @@ export default function LandingPage() {
                 </p>
               </div>
             </CardHeader>
-            <CardContent>
+            <CardContent className="bg-transparent">
               <ul className="space-y-3">
                 <li className="flex items-center text-slate-300">
                   <Check className="h-5 w-5 text-green-500 mr-2" />

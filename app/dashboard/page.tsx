@@ -6,9 +6,10 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
-import { PieChart, DollarSign, CreditCard, Target, LogOut, TrendingUp, Settings } from 'lucide-react'
+import { DollarSign, CreditCard, Target, TrendingUp } from 'lucide-react'
 import { formatCurrency, convertToMonthly, getGoalProgress, getGoalStatus } from '@/lib/utils'
 import BudgetChart from '@/components/BudgetChart'
+import Header from '@/components/Header'
 
 export default async function DashboardPage() {
   const session = await getServerSession(authOptions)
@@ -40,37 +41,7 @@ export default async function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950">
-      {/* Header */}
-      <header className="border-b border-slate-800">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center space-x-8">
-            <Link href="/dashboard" className="flex items-center space-x-2">
-              <PieChart className="h-8 w-8 text-blue-500" />
-              <span className="text-2xl font-bold text-white">MoneyMap</span>
-            </Link>
-            <nav className="hidden md:flex space-x-6">
-              <Link href="/dashboard" className="text-white font-medium">Dashboard</Link>
-              <Link href="/budget" className="text-slate-400 hover:text-white transition">Budget</Link>
-              <Link href="/subscriptions" className="text-slate-400 hover:text-white transition">Subscriptions</Link>
-              <Link href="/goals" className="text-slate-400 hover:text-white transition">Goals</Link>
-              <Link href="/coach" className="text-slate-400 hover:text-white transition">Coach</Link>
-            </nav>
-          </div>
-          <div className="flex items-center gap-4">
-            <Link href="/settings/profile">
-              <Button variant="ghost" size="sm">
-                <Settings className="h-4 w-4" />
-              </Button>
-            </Link>
-            <Link href="/api/auth/signout">
-              <Button variant="outline" size="sm">
-                <LogOut className="mr-2 h-4 w-4" />
-                Sign Out
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </header>
+      <Header />
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">

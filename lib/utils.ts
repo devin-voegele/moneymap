@@ -1,21 +1,23 @@
-import { type ClassValue, clsx } from "clsx"
+import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-export function formatCurrency(amount: number, currency: string = "EUR"): string {
+// Format currency
+export function formatCurrency(amount: number, currency: string = 'EUR'): string {
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: currency,
   }).format(amount)
 }
 
+// Convert different frequencies to monthly amount
 export function convertToMonthly(amount: number, frequency: string): number {
   switch (frequency) {
     case 'WEEKLY':
-      return amount * 52 / 12
+      return amount * 4.33 // Average weeks per month
     case 'YEARLY':
       return amount / 12
     case 'MONTHLY':
@@ -24,20 +26,25 @@ export function convertToMonthly(amount: number, frequency: string): number {
   }
 }
 
+// Calculate goal progress percentage
 export function getGoalProgress(currentSaved: number, targetAmount: number): number {
   if (targetAmount === 0) return 0
   return Math.min(Math.round((currentSaved / targetAmount) * 100), 100)
 }
 
-export function calculateRequiredMonthlySaving(
-  targetAmount: number,
+// Calculate required monthly savings for a goal
+export function calculateRequiredMonthlySavings(
   currentSaved: number,
-  targetDate: Date
+  targetAmount: number,
+  targetDate: Date | string | null
 ): number {
+  if (!targetDate) return 0
+  
+  const deadline = targetDate instanceof Date ? targetDate : new Date(targetDate)
   const now = new Date()
   const monthsLeft = Math.max(
-    (targetDate.getFullYear() - now.getFullYear()) * 12 +
-    (targetDate.getMonth() - now.getMonth()),
+    (deadline.getFullYear() - now.getFullYear()) * 12 +
+    (deadline.getMonth() - now.getMonth()),
     1
   )
   return Math.max((targetAmount - currentSaved) / monthsLeft, 0)
@@ -65,11 +72,9 @@ export function getGoalStatus(
   const progressPercentage = (currentSaved / targetAmount) * 100
   const timeElapsedPercentage = 100 - Math.min(100, (daysLeft / 365) * 100)
   
-  // If progress is ahead of time
-  if (progressPercentage >= timeElapsedPercentage) return 'on-track'
+  // If progress is significantly behind time elapsed
+  if (progressPercentage < timeElapsedPercentage - 20) return 'at-risk'
+  if (progressPercentage < timeElapsedPercentage - 10) return 'at-risk'
   
-  // If progress is somewhat behind
-  if (progressPercentage >= timeElapsedPercentage * 0.7) return 'at-risk'
-  
-  return 'off-track'
+  return 'on-track'
 }
