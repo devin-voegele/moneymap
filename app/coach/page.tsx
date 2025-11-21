@@ -6,6 +6,8 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { PieChart, LogOut, Settings, Send, Loader2, Sparkles } from 'lucide-react'
 import ReactMarkdown from 'react-markdown'
+import { toast } from 'sonner'
+import Header from '@/components/Header'
 
 type Message = {
   role: 'user' | 'assistant'
@@ -49,25 +51,43 @@ export default function CoachPage() {
         body: JSON.stringify({ message: userMessage })
       })
 
-      if (!res.ok) {
-        throw new Error('Failed to get response')
+      const data = await res.json()
+
+      if (res.status === 403 && data.error === 'FREE_TIER_LIMIT') {
+        // Show upgrade toast for free tier limit
+        toast.error('Free tier limit reached', {
+          description: data.message,
+          action: {
+            label: 'Upgrade to Pro',
+            onClick: () => window.location.href = '/settings/billing'
+          },
+          duration: 5000
+        })
+        setMessages(prev => prev.slice(0, -1)) // Remove the user message
+        return
       }
 
-      if (res.ok) {
-        const data = await res.json()
-        
-        // If AI took an action, show a special indicator
-        if (data.actionTaken) {
-          setMessages(prev => [...prev, { 
-            role: 'assistant', 
-            content: `✅ **Action completed!**\n\n${data.response}\n\n*Refresh the page to see your changes.*` 
-          }])
-        } else {
-          setMessages(prev => [...prev, { role: 'assistant', content: data.response }])
-        }
+      if (!res.ok) {
+        throw new Error(data.error || 'Failed to get response')
       }
-    } catch (error) {
+
+      // If AI took an action, show a special indicator
+      if (data.actionTaken) {
+        setMessages(prev => [...prev, { 
+          role: 'assistant', 
+          content: `✅ **Action completed!**\n\n${data.response}\n\n*Refresh the page to see your changes.*` 
+        }])
+        toast.success('Action completed!', {
+          description: 'Your changes have been saved.'
+        })
+      } else {
+        setMessages(prev => [...prev, { role: 'assistant', content: data.response }])
+      }
+    } catch (error: any) {
       console.error('Error:', error)
+      toast.error('Something went wrong', {
+        description: error.message || 'Please try again.'
+      })
       setMessages(prev => [...prev, { 
         role: 'assistant', 
         content: 'Sorry, I encountered an error. Please try again.' 
@@ -90,37 +110,7 @@ export default function CoachPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 flex flex-col">
-      {/* Header */}
-      <header className="border-b border-slate-800">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center space-x-8">
-            <Link href="/dashboard" className="flex items-center space-x-2">
-              <PieChart className="h-8 w-8 text-blue-500" />
-              <span className="text-2xl font-bold text-white">MoneyMap</span>
-            </Link>
-            <nav className="hidden md:flex space-x-6">
-              <Link href="/dashboard" className="text-slate-400 hover:text-white transition">Dashboard</Link>
-              <Link href="/budget" className="text-slate-400 hover:text-white transition">Budget</Link>
-              <Link href="/subscriptions" className="text-slate-400 hover:text-white transition">Subscriptions</Link>
-              <Link href="/goals" className="text-slate-400 hover:text-white transition">Goals</Link>
-              <Link href="/coach" className="text-white font-medium">Coach</Link>
-            </nav>
-          </div>
-          <div className="flex items-center gap-4">
-            <Link href="/settings/profile">
-              <Button variant="ghost" size="sm">
-                <Settings className="h-4 w-4" />
-              </Button>
-            </Link>
-            <Link href="/api/auth/signout">
-              <Button variant="outline" size="sm">
-                <LogOut className="mr-2 h-4 w-4" />
-                Sign Out
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </header>
+      <Header />
 
       {/* Main Content */}
       <main className="flex-1 container mx-auto px-4 py-6 flex flex-col max-w-7xl">

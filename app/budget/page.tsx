@@ -10,8 +10,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { PieChart, Plus, Trash2, Edit, DollarSign, CreditCard, TrendingUp, LogOut } from 'lucide-react'
+import { Plus, Trash2, Edit, DollarSign, CreditCard, TrendingUp } from 'lucide-react'
 import { formatCurrency, convertToMonthly } from '@/lib/utils'
+import Header from '@/components/Header'
+import { toast } from 'sonner'
 
 type Income = {
   id: string
@@ -173,30 +175,7 @@ export default function BudgetPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950">
-      {/* Header */}
-      <header className="border-b border-slate-800">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center space-x-8">
-            <Link href="/dashboard" className="flex items-center space-x-2">
-              <PieChart className="h-8 w-8 text-blue-500" />
-              <span className="text-2xl font-bold text-white">MoneyMap</span>
-            </Link>
-            <nav className="hidden md:flex space-x-6">
-              <Link href="/dashboard" className="text-slate-400 hover:text-white transition">Dashboard</Link>
-              <Link href="/budget" className="text-white font-medium">Budget</Link>
-              <Link href="/subscriptions" className="text-slate-400 hover:text-white transition">Subscriptions</Link>
-              <Link href="/goals" className="text-slate-400 hover:text-white transition">Goals</Link>
-              <Link href="/coach" className="text-slate-400 hover:text-white transition">Coach</Link>
-            </nav>
-          </div>
-          <Link href="/api/auth/signout">
-            <Button variant="outline" size="sm">
-              <LogOut className="mr-2 h-4 w-4" />
-              Sign Out
-            </Button>
-          </Link>
-        </div>
-      </header>
+      <Header />
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">

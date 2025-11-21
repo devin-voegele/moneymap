@@ -50,7 +50,7 @@ export default function Header() {
           {/* Desktop Actions */}
           <div className="hidden md:flex items-center gap-4">
             <Link href="/settings/profile">
-              <Button variant="ghost" size="sm">
+              <Button variant="outline" size="sm">
                 <Settings className="h-4 w-4" />
               </Button>
             </Link>

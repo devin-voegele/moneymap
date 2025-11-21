@@ -86,3 +86,65 @@ export async function GET() {
     )
   }
 }
+
+export async function DELETE(req: Request) {
+  try {
+    const session = await getServerSession(authOptions)
+
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
+    const { searchParams } = new URL(req.url)
+    const id = searchParams.get('id')
+
+    if (!id) {
+      return NextResponse.json({ error: 'Missing ID' }, { status: 400 })
+    }
+
+    await prisma.income.delete({
+      where: {
+        id,
+        userId: session.user.id,
+      }
+    })
+
+    return NextResponse.json({ success: true })
+  } catch (error) {
+    console.error('Income deletion error:', error)
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+  }
+}
+
+export async function PUT(req: Request) {
+  try {
+    const session = await getServerSession(authOptions)
+
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
+    const { id, name, amount, frequency } = await req.json()
+
+    if (!id) {
+      return NextResponse.json({ error: 'Missing ID' }, { status: 400 })
+    }
+
+    const income = await prisma.income.update({
+      where: {
+        id,
+        userId: session.user.id,
+      },
+      data: {
+        name,
+        amount: amount ? parseFloat(amount) : undefined,
+        frequency,
+      }
+    })
+
+    return NextResponse.json(income)
+  } catch (error) {
+    console.error('Income update error:', error)
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+  }
+}

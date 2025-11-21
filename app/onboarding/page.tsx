@@ -268,9 +268,9 @@ export default function OnboardingPage() {
             <div className="flex justify-between pt-4">
               {currentStep > STEPS.PERSONA && currentStep < STEPS.COMPLETE && (
                 <Button
-                  variant="outline"
+                  variant="secondary"
                   onClick={handleBack}
-                  className="text-white"
+                  className="bg-white text-black hover:bg-slate-100"
                 >
                   <ArrowLeft className="mr-2 h-4 w-4" />
                   Back

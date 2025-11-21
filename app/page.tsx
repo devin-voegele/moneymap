@@ -1,7 +1,10 @@
+'use client'
+
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { ArrowRight, PieChart, CreditCard, Target, MessageSquare, Check } from 'lucide-react'
+import { ArrowRight, Check, PieChart, TrendingUp, Target, Sparkles, Zap, CreditCard } from 'lucide-react'
+import { motion } from 'framer-motion'
 
 export default function LandingPage() {
   return (
@@ -25,52 +28,191 @@ export default function LandingPage() {
       </header>
 
       {/* Hero Section */}
-      <section className="container mx-auto px-4 py-20 md:py-32">
-        <div className="grid md:grid-cols-2 gap-12 items-center">
-          <div>
+      <section className="container mx-auto px-4 py-20 md:py-32 relative overflow-hidden">
+        {/* Animated background elements */}
+        <motion.div
+          className="absolute top-20 left-10 w-72 h-72 bg-blue-500/10 rounded-full blur-3xl"
+          animate={{
+            scale: [1, 1.2, 1],
+            opacity: [0.3, 0.5, 0.3],
+          }}
+          transition={{
+            duration: 8,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+        />
+        <motion.div
+          className="absolute bottom-20 right-10 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl"
+          animate={{
+            scale: [1, 1.3, 1],
+            opacity: [0.2, 0.4, 0.2],
+          }}
+          transition={{
+            duration: 10,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+        />
+        
+        <div className="grid md:grid-cols-2 gap-12 items-center relative z-10">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5 }}
+              className="inline-flex items-center gap-2 px-4 py-2 bg-blue-500/10 border border-blue-500/20 rounded-full mb-6"
+            >
+              <Sparkles className="h-4 w-4 text-blue-400" />
+              <span className="text-sm text-blue-400 font-medium">AI-Powered Financial Clarity</span>
+            </motion.div>
+            
             <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
-              Understand your money in 5 minutes
+              <motion.span
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+                className="block"
+              >
+                Understand your
+              </motion.span>
+              <motion.span
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.4 }}
+                className="block bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent"
+              >
+                money in 5 minutes
+              </motion.span>
             </h1>
-            <p className="text-xl text-slate-300 mb-8">
+            
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.6, delay: 0.6 }}
+              className="text-xl text-slate-300 mb-8"
+            >
               See exactly where your money goes and how to reach your goals – without spreadsheets or finance jargon.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4">
+            </motion.p>
+            
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.8 }}
+              className="flex flex-col sm:flex-row gap-4"
+            >
               <Link href="/auth/sign-up">
-                <Button size="lg" className="w-full sm:w-auto">
+                <Button size="lg" className="w-full sm:w-auto group">
                   Get started free
-                  <ArrowRight className="ml-2 h-5 w-5" />
+                  <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                 </Button>
               </Link>
-              <p className="text-sm text-slate-400 mt-2">
-                No credit card needed. Upgrade anytime for €4.99.
-              </p>
-              <Button size="lg" variant="outline" className="w-full sm:w-auto">
-                View demo
-              </Button>
-            </div>
-          </div>
-          <div className="relative">
-            <div className="bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-3xl p-8 backdrop-blur-sm border border-slate-700">
-              <div className="bg-slate-900/50 rounded-2xl p-6 space-y-4">
-                <div className="flex items-center justify-between">
-                  <span className="text-slate-400">Monthly Income</span>
-                  <span className="text-2xl font-bold text-green-400">€1,800</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-slate-400">Fixed Costs</span>
-                  <span className="text-2xl font-bold text-orange-400">€1,180</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-slate-400">Subscriptions</span>
-                  <span className="text-2xl font-bold text-red-400">€91</span>
-                </div>
-                <div className="border-t border-slate-700 pt-4 flex items-center justify-between">
-                  <span className="text-slate-400">Free Money</span>
-                  <span className="text-3xl font-bold text-blue-400">€529</span>
-                </div>
+              <div className="flex flex-col gap-1">
+                <Button size="lg" variant="outline" className="w-full sm:w-auto">
+                  View demo
+                </Button>
+                <p className="text-xs text-slate-500 text-center">
+                  No credit card • €4.99/mo for Pro
+                </p>
               </div>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            className="relative"
+          >
+            <motion.div
+              whileHover={{ scale: 1.02 }}
+              transition={{ duration: 0.3 }}
+              className="bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-3xl p-8 backdrop-blur-sm border border-slate-700 shadow-2xl"
+            >
+              <div className="bg-slate-900/50 rounded-2xl p-6 space-y-4">
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.5, delay: 0.6 }}
+                  className="flex items-center justify-between"
+                >
+                  <span className="text-slate-400">Monthly Income</span>
+                  <motion.span
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ duration: 0.5, delay: 0.8, type: "spring" }}
+                    className="text-2xl font-bold text-green-400"
+                  >
+                    €1,800
+                  </motion.span>
+                </motion.div>
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.5, delay: 0.7 }}
+                  className="flex items-center justify-between"
+                >
+                  <span className="text-slate-400">Fixed Costs</span>
+                  <motion.span
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ duration: 0.5, delay: 0.9, type: "spring" }}
+                    className="text-2xl font-bold text-orange-400"
+                  >
+                    €1,180
+                  </motion.span>
+                </motion.div>
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.5, delay: 0.8 }}
+                  className="flex items-center justify-between"
+                >
+                  <span className="text-slate-400">Subscriptions</span>
+                  <motion.span
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ duration: 0.5, delay: 1.0, type: "spring" }}
+                    className="text-2xl font-bold text-red-400"
+                  >
+                    €91
+                  </motion.span>
+                </motion.div>
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 1.1 }}
+                  className="border-t border-slate-700 pt-4 flex items-center justify-between"
+                >
+                  <span className="text-slate-400 flex items-center gap-2">
+                    <Zap className="h-4 w-4 text-blue-400" />
+                    Free Money
+                  </span>
+                  <motion.span
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ duration: 0.6, delay: 1.2, type: "spring", stiffness: 200 }}
+                    className="text-3xl font-bold text-blue-400"
+                  >
+                    €529
+                  </motion.span>
+                </motion.div>
+              </div>
+            </motion.div>
+            
+            {/* Floating badge */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5, delay: 1.4, type: "spring" }}
+              className="absolute -top-4 -right-4 bg-gradient-to-r from-blue-500 to-purple-500 text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg"
+            >
+              Live Preview
+            </motion.div>
+          </motion.div>
         </div>
       </section>
 

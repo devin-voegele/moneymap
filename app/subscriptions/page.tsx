@@ -12,6 +12,7 @@ import { Plus, Trash2, Search, TrendingUp, Calendar, DollarSign } from 'lucide-r
 import { formatCurrency, convertToMonthly } from '@/lib/utils'
 import UpgradeModal from '@/components/UpgradeModal'
 import Header from '@/components/Header'
+import { toast } from 'sonner'
 
 type Subscription = {
   id: string
@@ -95,9 +96,15 @@ export default function SubscriptionsPage() {
         await fetchSubscriptions()
         setIsDialogOpen(false)
         resetForm()
+        toast.success('Subscription added!', {
+          description: `${subName} has been added to your subscriptions.`
+        })
       }
     } catch (error) {
       console.error('Error adding subscription:', error)
+      toast.error('Failed to add subscription', {
+        description: 'Please try again.'
+      })
     }
   }
 
