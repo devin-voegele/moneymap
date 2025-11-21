@@ -14,7 +14,7 @@ export async function POST(req: Request) {
       )
     }
 
-    const { currency, country, persona, onboardingCompleted } = await req.json()
+    const { currency, country, persona } = await req.json()
 
     // Check if profile already exists
     const existingProfile = await prisma.profile.findUnique({
@@ -31,7 +31,6 @@ export async function POST(req: Request) {
           currency,
           country,
           persona,
-          onboardingCompleted,
         }
       })
     } else {
@@ -42,7 +41,6 @@ export async function POST(req: Request) {
           currency,
           country,
           persona,
-          onboardingCompleted,
         }
       })
     }
