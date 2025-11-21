@@ -435,7 +435,7 @@ export default function SubscriptionsPage() {
             <CardContent className="space-y-3">
               <div className="p-4 bg-blue-500/10 border border-blue-500/20 rounded-lg">
                 <p className="text-blue-400 text-sm">
-                  💡 Your subscriptions cost {formatCurrency(totalYearly)} per year. That's {((totalMonthly / 1000) * 100).toFixed(1)}% of a €1000 monthly income.
+                  <span className="font-semibold">Insight:</span> Your subscriptions cost {formatCurrency(totalYearly)} per year. That's {((totalMonthly / 1000) * 100).toFixed(1)}% of a €1000 monthly income.
                 </p>
               </div>
               {subscriptions.filter(s => s.worthIt === 'NO').length > 0 && (

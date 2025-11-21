@@ -244,7 +244,7 @@ export default async function DashboardPage() {
               {freeMoney > 0 && (
                 <div className="p-4 bg-blue-500/10 border border-blue-500/20 rounded-lg">
                   <p className="text-blue-400 text-sm">
-                    💡 You have {formatCurrency(freeMoney)} available each month. That's {formatCurrency(freeMoney * 12)} per year you could save!
+                    <span className="font-semibold">Insight:</span> You have {formatCurrency(freeMoney)} available each month. That's {formatCurrency(freeMoney * 12)} per year you could save!
                   </p>
                 </div>
               )}

@@ -37,7 +37,7 @@ export default function UpgradeModal({ isOpen, onClose, feature, message }: Upgr
         <div className="space-y-4 py-4">
           <div className="p-4 bg-blue-500/10 border border-blue-500/20 rounded-lg">
             <p className="text-blue-400 text-sm font-medium mb-3">
-              💡 {feature === 'subscription' && 'Most Pro users discover at least one subscription to cancel.'}
+              <span className="font-bold">Why upgrade?</span> {feature === 'subscription' && 'Most Pro users discover at least one subscription to cancel.'}
               {feature === 'goal' && 'Track multiple goals and reach them faster with Pro insights.'}
               {feature === 'income' && 'Track all your income sources in one place.'}
             </p>

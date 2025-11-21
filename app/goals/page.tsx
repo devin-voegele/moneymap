@@ -390,7 +390,7 @@ export default function GoalsPage() {
             <CardContent className="space-y-3">
               <div className="p-4 bg-blue-500/10 border border-blue-500/20 rounded-lg">
                 <p className="text-blue-400 text-sm">
-                  💡 Set realistic deadlines and update your progress regularly to stay motivated!
+                  <span className="font-semibold">Tip:</span> Set realistic deadlines and update your progress regularly to stay motivated!
                 </p>
               </div>
               {goals.some(g => getGoalStatus(g.currentAmount, g.targetAmount, g.deadline) === 'at-risk') && (

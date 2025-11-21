@@ -522,7 +522,7 @@ export default function LandingPage() {
               <p className="text-slate-400 text-sm mb-2">or €39/year (save 35%)</p>
               <div className="bg-green-500/10 border border-green-500/20 rounded-lg p-3 mt-3">
                 <p className="text-green-400 text-sm">
-                  💡 If MoneyMap helps you cancel just one €5–10/month subscription, it's already paid for itself.
+                  <span className="font-semibold">Pro Tip:</span> If MoneyMap helps you cancel just one €5–10/month subscription, it's already paid for itself.
                 </p>
               </div>
             </CardHeader>
