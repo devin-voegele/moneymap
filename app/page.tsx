@@ -462,6 +462,11 @@ export default function LandingPage() {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
+          <div className="text-center mb-3">
+            <span className="inline-block bg-gradient-to-r from-orange-500 to-red-500 text-white text-sm font-bold px-4 py-2 rounded-full mb-4 animate-pulse">
+              🔥 BLACK FRIDAY SPECIAL - 40% OFF
+            </span>
+          </div>
           <h2 className="text-3xl md:text-4xl font-bold text-white text-center mb-4">
             Simple, transparent pricing
           </h2>
@@ -533,18 +538,39 @@ export default function LandingPage() {
                 }}
               />
             <CardHeader className="bg-transparent">
-              <CardTitle className="text-white text-2xl">Pro</CardTitle>
+              <div className="flex items-center gap-2 mb-2">
+                <CardTitle className="text-white text-2xl">Pro</CardTitle>
+                <span className="bg-gradient-to-r from-orange-500 to-red-500 text-white text-xs font-bold px-2 py-1 rounded-full animate-pulse">
+                  BLACK FRIDAY
+                </span>
+              </div>
               <CardDescription className="text-slate-300">
                 For serious money management
               </CardDescription>
-              <div className="text-4xl font-bold text-white mt-4">
-                €4.99
-                <span className="text-lg text-slate-400">/month</span>
+              <div className="mt-4">
+                <div className="flex items-baseline gap-3">
+                  <div className="text-4xl font-bold text-white">
+                    €2.99
+                    <span className="text-lg text-slate-400">/month</span>
+                  </div>
+                  <div className="text-2xl text-slate-500 line-through">
+                    €4.99
+                  </div>
+                </div>
+                <div className="flex items-baseline gap-3 mt-2">
+                  <p className="text-slate-400 text-sm">or <span className="text-white font-semibold">€19/year</span></p>
+                  <p className="text-slate-500 text-sm line-through">€39/year</p>
+                  <span className="bg-green-500/20 text-green-400 text-xs font-bold px-2 py-1 rounded">
+                    SAVE 51%
+                  </span>
+                </div>
               </div>
-              <p className="text-slate-400 text-sm mb-2">or €39/year (save 35%)</p>
-              <div className="bg-green-500/10 border border-green-500/20 rounded-lg p-3 mt-3">
-                <p className="text-green-400 text-sm">
-                  <span className="font-semibold">Pro Tip:</span> If MoneyMap helps you cancel just one €5–10/month subscription, it's already paid for itself.
+              <div className="bg-gradient-to-r from-orange-500/10 to-red-500/10 border border-orange-500/20 rounded-lg p-3 mt-3">
+                <p className="text-orange-400 text-sm font-semibold">
+                  🔥 Limited Time Offer - Black Friday Special!
+                </p>
+                <p className="text-slate-400 text-xs mt-1">
+                  Lock in this price forever. Cancel anytime.
                 </p>
               </div>
             </CardHeader>
