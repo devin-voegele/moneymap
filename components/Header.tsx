@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { PieChart, LogOut, Settings, Menu, X } from 'lucide-react'
+import { motion, AnimatePresence } from 'framer-motion'
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -75,46 +76,73 @@ export default function Header() {
           </button>
         </div>
 
-        {/* Mobile Navigation - Full Screen */}
+      </div>
+
+      {/* Mobile Navigation - Full Screen Overlay */}
+      <AnimatePresence>
         {mobileMenuOpen && (
-          <div className="md:hidden fixed inset-0 top-[73px] left-0 right-0 bottom-0 bg-slate-950 z-40 overflow-y-auto">
+          <motion.div
+            initial={{ x: '100%' }}
+            animate={{ x: 0 }}
+            exit={{ x: '100%' }}
+            transition={{ type: 'tween', duration: 0.3, ease: 'easeInOut' }}
+            className="md:hidden fixed inset-0 top-[73px] bg-slate-950 z-50 overflow-y-auto"
+          >
             <div className="container mx-auto px-4 py-8 space-y-3">
-              {navItems.map((item) => (
-                <Link
+              {navItems.map((item, index) => (
+                <motion.div
                   key={item.href}
-                  href={item.href}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className={`block py-4 px-6 rounded-lg text-lg transition ${
-                    isActive(item.href)
-                      ? 'bg-blue-500/20 text-white font-medium'
-                      : 'text-slate-400 hover:bg-slate-800 hover:text-white'
-                  }`}
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: index * 0.1 }}
                 >
-                  {item.label}
-                </Link>
+                  <Link
+                    href={item.href}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={`block py-4 px-6 rounded-lg text-lg transition ${
+                      isActive(item.href)
+                        ? 'bg-blue-500/20 text-white font-medium'
+                        : 'text-slate-400 hover:bg-slate-800 hover:text-white'
+                    }`}
+                  >
+                    {item.label}
+                  </Link>
+                </motion.div>
               ))}
               <div className="pt-4 mt-4 border-t border-slate-800 space-y-3">
-                <Link
-                  href="/settings/profile"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="flex items-center py-4 px-6 text-lg text-slate-400 hover:bg-slate-800 hover:text-white rounded-lg transition"
+                <motion.div
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.5 }}
                 >
-                  <Settings className="h-5 w-5 mr-3" />
-                  Settings
-                </Link>
-                <Link
-                  href="/api/auth/signout"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="flex items-center py-4 px-6 text-lg text-slate-400 hover:bg-slate-800 hover:text-white rounded-lg transition"
+                  <Link
+                    href="/settings/profile"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex items-center py-4 px-6 text-lg text-slate-400 hover:bg-slate-800 hover:text-white rounded-lg transition"
+                  >
+                    <Settings className="h-5 w-5 mr-3" />
+                    Settings
+                  </Link>
+                </motion.div>
+                <motion.div
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.6 }}
                 >
-                  <LogOut className="h-5 w-5 mr-3" />
-                  Sign Out
-                </Link>
+                  <Link
+                    href="/api/auth/signout"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex items-center py-4 px-6 text-lg text-slate-400 hover:bg-slate-800 hover:text-white rounded-lg transition"
+                  >
+                    <LogOut className="h-5 w-5 mr-3" />
+                    Sign Out
+                  </Link>
+                </motion.div>
               </div>
             </div>
-          </div>
+          </motion.div>
         )}
-      </div>
+      </AnimatePresence>
     </header>
   )
 }
