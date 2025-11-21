@@ -75,40 +75,42 @@ export default function Header() {
           </button>
         </div>
 
-        {/* Mobile Navigation */}
+        {/* Mobile Navigation - Full Screen */}
         {mobileMenuOpen && (
-          <div className="md:hidden mt-4 pb-4 space-y-3">
-            {navItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={() => setMobileMenuOpen(false)}
-                className={`block py-2 px-4 rounded-lg transition ${
-                  isActive(item.href)
-                    ? 'bg-blue-500/20 text-white font-medium'
-                    : 'text-slate-400 hover:bg-slate-800 hover:text-white'
-                }`}
-              >
-                {item.label}
-              </Link>
-            ))}
-            <div className="pt-3 border-t border-slate-800 space-y-2">
-              <Link
-                href="/settings/profile"
-                onClick={() => setMobileMenuOpen(false)}
-                className="flex items-center py-2 px-4 text-slate-400 hover:bg-slate-800 hover:text-white rounded-lg transition"
-              >
-                <Settings className="h-4 w-4 mr-2" />
-                Settings
-              </Link>
-              <Link
-                href="/api/auth/signout"
-                onClick={() => setMobileMenuOpen(false)}
-                className="flex items-center py-2 px-4 text-slate-400 hover:bg-slate-800 hover:text-white rounded-lg transition"
-              >
-                <LogOut className="h-4 w-4 mr-2" />
-                Sign Out
-              </Link>
+          <div className="md:hidden fixed inset-0 top-[73px] left-0 right-0 bottom-0 bg-slate-950 z-40 overflow-y-auto">
+            <div className="container mx-auto px-4 py-8 space-y-3">
+              {navItems.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`block py-4 px-6 rounded-lg text-lg transition ${
+                    isActive(item.href)
+                      ? 'bg-blue-500/20 text-white font-medium'
+                      : 'text-slate-400 hover:bg-slate-800 hover:text-white'
+                  }`}
+                >
+                  {item.label}
+                </Link>
+              ))}
+              <div className="pt-4 mt-4 border-t border-slate-800 space-y-3">
+                <Link
+                  href="/settings/profile"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center py-4 px-6 text-lg text-slate-400 hover:bg-slate-800 hover:text-white rounded-lg transition"
+                >
+                  <Settings className="h-5 w-5 mr-3" />
+                  Settings
+                </Link>
+                <Link
+                  href="/api/auth/signout"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center py-4 px-6 text-lg text-slate-400 hover:bg-slate-800 hover:text-white rounded-lg transition"
+                >
+                  <LogOut className="h-5 w-5 mr-3" />
+                  Sign Out
+                </Link>
+              </div>
             </div>
           </div>
         )}

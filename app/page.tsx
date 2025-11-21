@@ -39,23 +39,24 @@ export default function LandingPage() {
           </button>
         </div>
 
-        {/* Mobile Menu */}
+        {/* Mobile Menu - Full Screen */}
         <AnimatePresence>
           {mobileMenuOpen && (
             <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0 }}
-              className="md:hidden border-t border-slate-800 bg-slate-950"
+              initial={{ opacity: 0, x: '100%' }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: '100%' }}
+              transition={{ type: 'tween', duration: 0.3 }}
+              className="md:hidden fixed inset-0 top-[73px] bg-slate-950 z-40 overflow-y-auto"
             >
-              <div className="container mx-auto px-4 py-4 space-y-3">
+              <div className="container mx-auto px-4 py-8 space-y-4">
                 <Link href="/auth/sign-in" onClick={() => setMobileMenuOpen(false)}>
-                  <Button variant="ghost" className="w-full text-white justify-start">
+                  <Button variant="ghost" size="lg" className="w-full text-white justify-start text-lg h-14">
                     Sign In
                   </Button>
                 </Link>
                 <Link href="/auth/sign-up" onClick={() => setMobileMenuOpen(false)}>
-                  <Button className="w-full">Get Started</Button>
+                  <Button size="lg" className="w-full text-lg h-14">Get Started</Button>
                 </Link>
               </div>
             </motion.div>
