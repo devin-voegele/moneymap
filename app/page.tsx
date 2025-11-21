@@ -13,7 +13,7 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950">
       {/* Header */}
-      <header className="border-b border-slate-800 sticky top-0 bg-slate-950/95 backdrop-blur-sm z-50">
+      <header className="border-b border-slate-800 sticky top-0 bg-slate-950/95 backdrop-blur-sm z-30">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <Link href="/" className="flex items-center space-x-2">
             <PieChart className="h-6 w-6 md:h-8 md:w-8 text-blue-500" />
@@ -38,18 +38,39 @@ export default function LandingPage() {
             {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </button>
         </div>
+      </header>
 
-        {/* Mobile Menu - Full Screen */}
-        <AnimatePresence>
-          {mobileMenuOpen && (
+      {/* Mobile Menu - Full Screen Overlay */}
+      <AnimatePresence mode="wait">
+        {mobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="md:hidden fixed inset-0 bg-black/80 z-[9999]"
+            onClick={() => setMobileMenuOpen(false)}
+          >
+            {/* Menu Panel */}
             <motion.div
-              initial={{ opacity: 0, x: '100%' }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: '100%' }}
-              transition={{ type: 'tween', duration: 0.3 }}
-              className="md:hidden fixed inset-0 top-[73px] bg-slate-950 z-40 overflow-y-auto"
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+              onClick={(e) => e.stopPropagation()}
+              className="absolute top-0 right-0 bottom-0 w-[85%] max-w-sm bg-slate-950 overflow-y-auto shadow-2xl"
             >
-              <div className="container mx-auto px-4 py-8 space-y-4">
+              {/* Close button */}
+              <div className="flex justify-between items-center p-4 border-b border-slate-800">
+                <span className="text-white font-bold text-lg">Menu</span>
+                <button
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="text-white p-2 hover:bg-slate-800 rounded-lg transition"
+                >
+                  <X className="h-6 w-6" />
+                </button>
+              </div>
+              
+              <div className="px-4 py-6 space-y-4">
                 <Link href="/auth/sign-in" onClick={() => setMobileMenuOpen(false)}>
                   <Button variant="ghost" size="lg" className="w-full text-white justify-start text-lg h-14">
                     Sign In
@@ -60,9 +81,9 @@ export default function LandingPage() {
                 </Link>
               </div>
             </motion.div>
-          )}
-        </AnimatePresence>
-      </header>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Hero Section */}
       <section className="container mx-auto px-4 py-20 md:py-32 relative overflow-hidden">
