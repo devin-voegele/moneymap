@@ -15,7 +15,7 @@ export async function GET() {
       where: { email: session.user.email },
       include: {
         profile: true,
-        incomes: true,
+        income: true,
         fixedCosts: true,
         subscriptions: true,
         goals: true,
@@ -27,7 +27,7 @@ export async function GET() {
     }
 
     // Calculate totals
-    const totalIncome = user.incomes.reduce((sum: number, income: any) => sum + income.amount, 0)
+    const totalIncome = user.income.reduce((sum: number, income: any) => sum + income.amount, 0)
     const totalFixedCosts = user.fixedCosts.reduce((sum: number, cost: any) => sum + cost.amount, 0)
     const totalSubscriptions = user.subscriptions.reduce((sum: number, sub: any) => sum + sub.amount, 0)
     const freeMoney = totalIncome - totalFixedCosts - totalSubscriptions
@@ -90,8 +90,8 @@ export async function GET() {
       pattern: 'solid',
       fgColor: { argb: '10B981' }
     }
-    user.incomes.forEach((income: any) => {
-      incomeSheet.addRow({ source: income.source, amount: income.amount })
+    user.income.forEach((income: any) => {
+      incomeSheet.addRow({ source: income.name, amount: income.amount })
     })
 
     // Fixed Costs Sheet
@@ -127,7 +127,7 @@ export async function GET() {
       subscriptionsSheet.addRow({ 
         name: sub.name, 
         amount: sub.amount,
-        cycle: sub.billingCycle 
+        cycle: sub.frequency 
       })
     })
 
