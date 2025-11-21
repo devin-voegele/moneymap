@@ -2,10 +2,11 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { PieChart, LogOut, Settings, Menu, X } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
+import NProgress from 'nprogress'
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -20,6 +21,11 @@ export default function Header() {
   ]
 
   const isActive = (href: string) => pathname === href
+  
+  const handleNavigation = (href: string) => {
+    NProgress.start()
+    setMobileMenuOpen(false)
+  }
 
   return (
     <>
@@ -38,6 +44,8 @@ export default function Header() {
                 <Link
                   key={item.href}
                   href={item.href}
+                  prefetch={true}
+                  onClick={() => NProgress.start()}
                   className={`transition ${
                     isActive(item.href)
                       ? 'text-white font-medium'
@@ -119,7 +127,7 @@ export default function Header() {
                 >
                   <Link
                     href={item.href}
-                    onClick={() => setMobileMenuOpen(false)}
+                    onClick={() => handleNavigation(item.href)}
                     className={`block py-4 px-6 rounded-lg text-lg transition ${
                       isActive(item.href)
                         ? 'bg-blue-500/20 text-white font-medium'
@@ -138,7 +146,7 @@ export default function Header() {
                 >
                   <Link
                     href="/settings/profile"
-                    onClick={() => setMobileMenuOpen(false)}
+                    onClick={() => handleNavigation('/settings/profile')}
                     className="flex items-center py-4 px-6 text-lg text-slate-400 hover:bg-slate-800 hover:text-white rounded-lg transition"
                   >
                     <Settings className="h-5 w-5 mr-3" />
@@ -152,7 +160,7 @@ export default function Header() {
                 >
                   <Link
                     href="/api/auth/signout"
-                    onClick={() => setMobileMenuOpen(false)}
+                    onClick={() => handleNavigation('/api/auth/signout')}
                     className="flex items-center py-4 px-6 text-lg text-slate-400 hover:bg-slate-800 hover:text-white rounded-lg transition"
                   >
                     <LogOut className="h-5 w-5 mr-3" />
