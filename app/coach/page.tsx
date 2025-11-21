@@ -33,11 +33,10 @@ export default function CoachPage() {
     scrollToBottom()
   }, [messages])
 
-  const suggestedPrompts = [
-    "Can I afford another subscription?",
-    "How can I reach my goals faster?",
-    "What should I cut first?",
-    "Am I spending too much on subscriptions?",
+  const quickPrompts = [
+    "What can I do to save more money?",
+    "Which subscriptions should I cancel?",
+    "Export my budget to Excel",
     "How much should I save each month?",
   ]
 
@@ -150,8 +149,8 @@ export default function CoachPage() {
                   <p className="text-slate-500 mb-8 max-w-lg">
                     No investing hype. Just straight talk about your budget and goals.
                   </p>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 w-full max-w-4xl">
-                    {suggestedPrompts.map((prompt, index) => (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 w-full max-w-2xl">
+                    {quickPrompts.map((prompt, index) => (
                       <button
                         key={index}
                         onClick={() => handlePromptClick(prompt)}
