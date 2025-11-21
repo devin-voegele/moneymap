@@ -46,7 +46,7 @@ export function calculateRequiredMonthlySaving(
 export function getGoalStatus(
   currentSaved: number,
   targetAmount: number,
-  targetDate: string | null
+  targetDate: string | Date | null
 ): 'completed' | 'on-track' | 'at-risk' | 'off-track' {
   // Check if goal is completed
   if (currentSaved >= targetAmount) return 'completed'
@@ -54,7 +54,7 @@ export function getGoalStatus(
   // If no deadline, can't determine status
   if (!targetDate) return 'on-track'
   
-  const deadline = new Date(targetDate)
+  const deadline = targetDate instanceof Date ? targetDate : new Date(targetDate)
   const now = new Date()
   const daysLeft = Math.ceil((deadline.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))
   
