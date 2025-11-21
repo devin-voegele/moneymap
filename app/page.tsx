@@ -1,22 +1,27 @@
 'use client'
 
+import { useState } from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { ArrowRight, Check, PieChart, TrendingUp, Target, Sparkles, Zap, CreditCard } from 'lucide-react'
-import { motion } from 'framer-motion'
+import { ArrowRight, Check, PieChart, TrendingUp, Target, Sparkles, Zap, CreditCard, Menu, X } from 'lucide-react'
+import { motion, AnimatePresence } from 'framer-motion'
 
 export default function LandingPage() {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950">
       {/* Header */}
-      <header className="border-b border-slate-800">
+      <header className="border-b border-slate-800 sticky top-0 bg-slate-950/95 backdrop-blur-sm z-50">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <PieChart className="h-8 w-8 text-blue-500" />
-            <span className="text-2xl font-bold text-white">MoneyMap</span>
-          </div>
-          <div className="flex items-center space-x-4">
+          <Link href="/" className="flex items-center space-x-2">
+            <PieChart className="h-6 w-6 md:h-8 md:w-8 text-blue-500" />
+            <span className="text-xl md:text-2xl font-bold text-white">MoneyMap</span>
+          </Link>
+          
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center space-x-4">
             <Link href="/auth/sign-in">
               <Button variant="ghost" className="text-white">Sign In</Button>
             </Link>
@@ -24,7 +29,38 @@ export default function LandingPage() {
               <Button>Get Started</Button>
             </Link>
           </div>
+
+          {/* Mobile Menu Button */}
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="md:hidden text-white p-2"
+          >
+            {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+          </button>
         </div>
+
+        {/* Mobile Menu */}
+        <AnimatePresence>
+          {mobileMenuOpen && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              className="md:hidden border-t border-slate-800 bg-slate-950"
+            >
+              <div className="container mx-auto px-4 py-4 space-y-3">
+                <Link href="/auth/sign-in" onClick={() => setMobileMenuOpen(false)}>
+                  <Button variant="ghost" className="w-full text-white justify-start">
+                    Sign In
+                  </Button>
+                </Link>
+                <Link href="/auth/sign-up" onClick={() => setMobileMenuOpen(false)}>
+                  <Button className="w-full">Get Started</Button>
+                </Link>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </header>
 
       {/* Hero Section */}
@@ -71,7 +107,7 @@ export default function LandingPage() {
               <span className="text-sm text-blue-400 font-medium">AI-Powered Financial Clarity</span>
             </motion.div>
             
-            <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
               <motion.span
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -94,7 +130,7 @@ export default function LandingPage() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.6, delay: 0.6 }}
-              className="text-xl text-slate-300 mb-8"
+              className="text-base sm:text-lg md:text-xl text-slate-300 mb-8"
             >
               See exactly where your money goes and how to reach your goals – without spreadsheets or finance jargon.
             </motion.p>
@@ -103,34 +139,29 @@ export default function LandingPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.8 }}
-              className="flex flex-col sm:flex-row gap-4"
+              className="flex flex-col gap-3"
             >
-              <Link href="/auth/sign-up">
-                <Button size="lg" className="w-full sm:w-auto group">
+              <Link href="/auth/sign-up" className="w-full sm:w-auto">
+                <Button size="lg" className="w-full group">
                   Get started free
                   <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                 </Button>
               </Link>
-              <div className="flex flex-col gap-1">
-                <Button size="lg" variant="outline" className="w-full sm:w-auto">
-                  View demo
-                </Button>
-                <p className="text-xs text-slate-500 text-center">
-                  No credit card • €4.99/mo for Pro
-                </p>
-              </div>
+              <p className="text-xs text-slate-500 text-center sm:text-left">
+                No credit card required • €4.99/mo for Pro
+              </p>
             </motion.div>
           </motion.div>
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
-            className="relative"
+            className="relative mt-12 md:mt-0"
           >
             <motion.div
               whileHover={{ scale: 1.02 }}
               transition={{ duration: 0.3 }}
-              className="bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-3xl p-8 backdrop-blur-sm border border-slate-700 shadow-2xl"
+              className="bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-2xl md:rounded-3xl p-4 sm:p-6 md:p-8 backdrop-blur-sm border border-slate-700 shadow-2xl"
             >
               <div className="bg-slate-900/50 rounded-2xl p-6 space-y-4">
                 <motion.div
@@ -139,12 +170,12 @@ export default function LandingPage() {
                   transition={{ duration: 0.5, delay: 0.6 }}
                   className="flex items-center justify-between"
                 >
-                  <span className="text-slate-400">Monthly Income</span>
+                  <span className="text-sm sm:text-base text-slate-400">Monthly Income</span>
                   <motion.span
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
                     transition={{ duration: 0.5, delay: 0.8, type: "spring" }}
-                    className="text-2xl font-bold text-green-400"
+                    className="text-xl sm:text-2xl font-bold text-green-400"
                   >
                     €1,800
                   </motion.span>
@@ -155,12 +186,12 @@ export default function LandingPage() {
                   transition={{ duration: 0.5, delay: 0.7 }}
                   className="flex items-center justify-between"
                 >
-                  <span className="text-slate-400">Fixed Costs</span>
+                  <span className="text-sm sm:text-base text-slate-400">Fixed Costs</span>
                   <motion.span
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
                     transition={{ duration: 0.5, delay: 0.9, type: "spring" }}
-                    className="text-2xl font-bold text-orange-400"
+                    className="text-xl sm:text-2xl font-bold text-orange-400"
                   >
                     €1,180
                   </motion.span>
@@ -171,12 +202,12 @@ export default function LandingPage() {
                   transition={{ duration: 0.5, delay: 0.8 }}
                   className="flex items-center justify-between"
                 >
-                  <span className="text-slate-400">Subscriptions</span>
+                  <span className="text-sm sm:text-base text-slate-400">Subscriptions</span>
                   <motion.span
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
                     transition={{ duration: 0.5, delay: 1.0, type: "spring" }}
-                    className="text-2xl font-bold text-red-400"
+                    className="text-xl sm:text-2xl font-bold text-red-400"
                   >
                     €91
                   </motion.span>
@@ -187,7 +218,7 @@ export default function LandingPage() {
                   transition={{ duration: 0.5, delay: 1.1 }}
                   className="border-t border-slate-700 pt-4 flex items-center justify-between"
                 >
-                  <span className="text-slate-400 flex items-center gap-2">
+                  <span className="text-sm sm:text-base text-slate-400 flex items-center gap-2">
                     <Zap className="h-4 w-4 text-blue-400" />
                     Free Money
                   </span>
@@ -195,7 +226,7 @@ export default function LandingPage() {
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
                     transition={{ duration: 0.6, delay: 1.2, type: "spring", stiffness: 200 }}
-                    className="text-3xl font-bold text-blue-400"
+                    className="text-2xl sm:text-3xl font-bold text-blue-400"
                   >
                     €529
                   </motion.span>
@@ -218,45 +249,86 @@ export default function LandingPage() {
 
       {/* Why MoneyMap Section */}
       <section className="container mx-auto px-4 py-20">
-        <h2 className="text-3xl md:text-4xl font-bold text-white text-center mb-12">
-          Why MoneyMap?
-        </h2>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+        >
+          <h2 className="text-3xl md:text-4xl font-bold text-white text-center mb-4">
+            Why MoneyMap?
+          </h2>
+          <p className="text-slate-400 text-center mb-12 max-w-2xl mx-auto">
+            Built for students, apprentices & young workers who want clarity without complexity
+          </p>
+        </motion.div>
+        
         <div className="grid md:grid-cols-3 gap-8">
-          <Card className="bg-slate-900/50 border-slate-700">
-            <CardHeader>
-              <PieChart className="h-12 w-12 text-blue-500 mb-4" />
-              <CardTitle className="text-white">Finally see where money goes</CardTitle>
-              <CardDescription className="text-slate-400">
-                Get instant clarity on your income, fixed costs, and what's left to spend or save.
-              </CardDescription>
-            </CardHeader>
-          </Card>
-          <Card className="bg-slate-900/50 border-slate-700">
-            <CardHeader>
-              <CreditCard className="h-12 w-12 text-blue-500 mb-4" />
-              <CardTitle className="text-white">Keep subs under control</CardTitle>
-              <CardDescription className="text-slate-400">
-                Track all your subscriptions and see their yearly cost. Cancel what you don't need.
-              </CardDescription>
-            </CardHeader>
-          </Card>
-          <Card className="bg-slate-900/50 border-slate-700">
-            <CardHeader>
-              <Target className="h-12 w-12 text-blue-500 mb-4" />
-              <CardTitle className="text-white">Hit your goals faster</CardTitle>
-              <CardDescription className="text-slate-400">
-                Set savings goals and see exactly how much to save each month to reach them.
-              </CardDescription>
-            </CardHeader>
-          </Card>
+          {[
+            {
+              icon: PieChart,
+              title: "Finally see where money goes",
+              description: "Get instant clarity on your income, fixed costs, and what's left to spend or save.",
+              delay: 0.1,
+              color: "blue"
+            },
+            {
+              icon: CreditCard,
+              title: "Keep subs under control",
+              description: "Track all your subscriptions and see their yearly cost. Cancel what you don't need.",
+              delay: 0.2,
+              color: "purple"
+            },
+            {
+              icon: Target,
+              title: "Hit your goals faster",
+              description: "Set savings goals and see exactly how much to save each month to reach them.",
+              delay: 0.3,
+              color: "green"
+            }
+          ].map((feature, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: feature.delay }}
+              whileHover={{ y: -8, transition: { duration: 0.3 } }}
+            >
+              <Card className="bg-slate-900/50 border-slate-700 h-full hover:border-slate-600 transition-all">
+                <CardHeader>
+                  <motion.div
+                    whileHover={{ rotate: 360, scale: 1.1 }}
+                    transition={{ duration: 0.6 }}
+                  >
+                    <feature.icon className={`h-12 w-12 text-${feature.color}-500 mb-4`} />
+                  </motion.div>
+                  <CardTitle className="text-white">{feature.title}</CardTitle>
+                  <CardDescription className="text-slate-400">
+                    {feature.description}
+                  </CardDescription>
+                </CardHeader>
+              </Card>
+            </motion.div>
+          ))}
         </div>
       </section>
 
       {/* Features Section */}
-      <section className="container mx-auto px-4 py-20">
-        <h2 className="text-3xl md:text-4xl font-bold text-white text-center mb-12">
-          Everything you need
-        </h2>
+      <section className="container mx-auto px-4 py-20 bg-slate-900/30 rounded-3xl">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+        >
+          <h2 className="text-3xl md:text-4xl font-bold text-white text-center mb-4">
+            Everything you need
+          </h2>
+          <p className="text-slate-400 text-center mb-12">
+            Simple tools that actually help you manage money
+          </p>
+        </motion.div>
         <div className="grid md:grid-cols-2 gap-8">
           <Card className="bg-slate-900/50 border-slate-700">
             <CardHeader>
@@ -362,13 +434,28 @@ export default function LandingPage() {
 
       {/* Pricing Section */}
       <section className="container mx-auto px-4 py-20">
-        <h2 className="text-3xl md:text-4xl font-bold text-white text-center mb-4">
-          Simple, transparent pricing
-        </h2>
-        <p className="text-center text-slate-400 mb-2">Designed for students, apprentices & young workers</p>
-        <p className="text-center text-slate-500 text-sm mb-12">Cancel anytime. No hidden fees.</p>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+        >
+          <h2 className="text-3xl md:text-4xl font-bold text-white text-center mb-4">
+            Simple, transparent pricing
+          </h2>
+          <p className="text-center text-slate-400 mb-2">Designed for students, apprentices & young workers</p>
+          <p className="text-center text-slate-500 text-sm mb-12">Cancel anytime. No hidden fees.</p>
+        </motion.div>
+        
         <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-          <Card className="bg-slate-900/50 border-slate-700">
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            whileHover={{ y: -8 }}
+          >
+            <Card className="bg-slate-900/50 border-slate-700 h-full hover:border-slate-600 transition-all">
             <CardHeader>
               <CardTitle className="text-white text-2xl">Free</CardTitle>
               <CardDescription className="text-slate-400">
@@ -400,9 +487,29 @@ export default function LandingPage() {
               </Link>
             </CardContent>
           </Card>
+          </motion.div>
 
-          <Card className="border-blue-500 bg-slate-900/90 relative overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-purple-500/20 -z-10"></div>
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            whileHover={{ y: -8, scale: 1.02 }}
+          >
+            <Card className="border-blue-500 bg-slate-900/90 relative overflow-hidden h-full">
+              <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-purple-500/20 -z-10"></div>
+              <motion.div
+                className="absolute -top-20 -right-20 w-40 h-40 bg-blue-500/20 rounded-full blur-3xl"
+                animate={{
+                  scale: [1, 1.2, 1],
+                  opacity: [0.3, 0.6, 0.3],
+                }}
+                transition={{
+                  duration: 4,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+              />
             <CardHeader className="bg-transparent">
               <CardTitle className="text-white text-2xl">Pro</CardTitle>
               <CardDescription className="text-slate-300">
@@ -455,25 +562,64 @@ export default function LandingPage() {
               </Link>
             </CardContent>
           </Card>
+          </motion.div>
         </div>
       </section>
 
       {/* CTA Section */}
       <section className="container mx-auto px-4 py-20">
-        <div className="bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-3xl p-12 text-center border border-slate-700">
-          <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">
-            Ready to take control of your money?
-          </h2>
-          <p className="text-xl text-slate-300 mb-8 max-w-2xl mx-auto">
-            Join thousands of students and young adults who finally understand where their money goes.
-          </p>
-          <Link href="/auth/sign-up">
-            <Button size="lg">
-              Get started for free
-              <ArrowRight className="ml-2 h-5 w-5" />
-            </Button>
-          </Link>
-        </div>
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-2xl md:rounded-3xl p-6 sm:p-8 md:p-12 text-center border border-slate-700 relative overflow-hidden"
+        >
+          <motion.div
+            className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-blue-500/10 to-purple-500/10"
+            animate={{
+              backgroundPosition: ['0% 0%', '100% 100%'],
+            }}
+            transition={{
+              duration: 10,
+              repeat: Infinity,
+              repeatType: "reverse"
+            }}
+          />
+          <div className="relative z-10">
+            <motion.h2
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4 md:mb-6"
+            >
+              Ready to take control of your money?
+            </motion.h2>
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+              className="text-base sm:text-lg md:text-xl text-slate-300 mb-6 md:mb-8 max-w-2xl mx-auto"
+            >
+              Join thousands of students and young adults who finally understand where their money goes.
+            </motion.p>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.6 }}
+            >
+              <Link href="/auth/sign-up">
+                <Button size="lg" className="group w-full sm:w-auto">
+                  Get started for free
+                  <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                </Button>
+              </Link>
+            </motion.div>
+          </div>
+        </motion.div>
       </section>
 
       {/* Footer */}
