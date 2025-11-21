@@ -8,6 +8,11 @@ const inter = Inter({ subsets: ['latin'] })
 export const metadata: Metadata = {
   title: 'MoneyMap - Simple money clarity for students & young adults',
   description: 'Understand where your money goes, manage subscriptions, and hit small savings goals without complex finance tools.',
+  viewport: {
+    width: 'device-width',
+    initialScale: 1,
+    maximumScale: 1,
+  },
 }
 
 export default function RootLayout({
