@@ -187,12 +187,7 @@ export default function SubscriptionsPage() {
 
         {/* Summary Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-          >
-            <Card className="bg-slate-900/50 border-slate-700 hover:border-slate-600 transition-all">
+          <Card className="bg-slate-900/50 border-slate-700">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium text-slate-400">Monthly Cost</CardTitle>
               <DollarSign className="h-4 w-4 text-blue-500" />
