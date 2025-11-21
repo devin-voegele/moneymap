@@ -251,6 +251,18 @@ FORMATTING RULES:
             required: ['name', 'amount', 'frequency', 'category']
           }
         }
+      },
+      {
+        type: 'function',
+        function: {
+          name: 'export_excel_report',
+          description: 'Generate and download a detailed Excel report with all budget data, expenses, subscriptions, and goals. Use this when the user asks for an export, report, spreadsheet, or Excel file.',
+          parameters: {
+            type: 'object',
+            properties: {},
+            required: []
+          }
+        }
       }
     ]
 
@@ -349,6 +361,10 @@ FORMATTING RULES:
             functionResult = `Fixed cost "${costData.name}" added successfully (${formatCurrency(costData.amount, currency)} ${costData.frequency.toLowerCase()}).`
             break
 
+          case 'export_excel_report':
+            functionResult = 'EXCEL_EXPORT_REQUESTED'
+            break
+
           default:
             functionResult = 'Function not recognized.'
         }
@@ -381,6 +397,16 @@ FORMATTING RULES:
         })
 
         const finalResponse = finalCompletion.choices[0]?.message?.content || functionResult
+
+        // Special handling for Excel export
+        if (functionName === 'export_excel_report') {
+          return NextResponse.json({ 
+            response: finalResponse,
+            actionTaken: true,
+            functionCalled: functionName,
+            excelExport: true
+          })
+        }
 
         return NextResponse.json({ 
           response: finalResponse,

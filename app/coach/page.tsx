@@ -78,13 +78,28 @@ export default function CoachPage() {
 
       // If AI took an action, show a special indicator
       if (data.actionTaken) {
-        setMessages(prev => [...prev, { 
-          role: 'assistant', 
-          content: `✅ **Action completed!**\n\n${data.response}\n\n*Refresh the page to see your changes.*` 
-        }])
-        toast.success('Action completed!', {
-          description: 'Your changes have been saved.'
-        })
+        // Special handling for Excel export
+        if (data.excelExport) {
+          setMessages(prev => [...prev, { 
+            role: 'assistant', 
+            content: `${data.response}\n\n📊 **Generating your Excel report...**` 
+          }])
+          
+          // Trigger download
+          window.open('/api/export/excel', '_blank')
+          
+          toast.success('Excel report generated!', {
+            description: 'Your report is downloading now.'
+          })
+        } else {
+          setMessages(prev => [...prev, { 
+            role: 'assistant', 
+            content: `✅ **Action completed!**\n\n${data.response}\n\n*Refresh the page to see your changes.*` 
+          }])
+          toast.success('Action completed!', {
+            description: 'Your changes have been saved.'
+          })
+        }
       } else {
         setMessages(prev => [...prev, { role: 'assistant', content: data.response }])
       }
