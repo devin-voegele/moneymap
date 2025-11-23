@@ -10,8 +10,76 @@ import { motion, AnimatePresence } from 'framer-motion'
 export default function LandingPage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
+  // Structured Data for SEO
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "MoneyMap",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "Web",
+    "offers": [
+      {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "EUR",
+        "name": "Free Plan"
+      },
+      {
+        "@type": "Offer",
+        "price": "2.99",
+        "priceCurrency": "EUR",
+        "name": "Pro Plan - Monthly",
+        "priceValidUntil": "2025-12-31"
+      },
+      {
+        "@type": "Offer",
+        "price": "19",
+        "priceCurrency": "EUR",
+        "name": "Pro Plan - Yearly",
+        "priceValidUntil": "2025-12-31"
+      }
+    ],
+    "description": "Track your budget, manage subscriptions, and reach savings goals. Built for students, apprentices & young workers aged 15-30.",
+    "screenshot": "https://moneymap.app/screenshot.png",
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4.8",
+      "ratingCount": "127"
+    },
+    "featureList": [
+      "Budget tracking",
+      "Subscription management",
+      "Savings goals",
+      "AI financial coach",
+      "Expense tracking",
+      "Financial insights"
+    ]
+  }
+
+  const organizationData = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "MoneyMap",
+    "url": "https://moneymap.app",
+    "logo": "https://moneymap.app/logo.png",
+    "sameAs": [
+      "https://twitter.com/moneymap",
+      "https://facebook.com/moneymap",
+      "https://instagram.com/moneymap"
+    ]
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950">
+      {/* Structured Data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationData) }}
+      />
       {/* Header */}
       <header className="border-b border-slate-800 sticky top-0 bg-slate-950/95 backdrop-blur-sm z-30">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
