@@ -114,7 +114,7 @@ export default function BillingSettingsPage() {
                     <p className="text-slate-400 text-sm">
                       {currentPlan === 'FREE' 
                         ? 'Basic features with limitations' 
-                        : '€4.99/month - All features unlocked'}
+                        : '€2.99/month - All features unlocked'}
                     </p>
                   </div>
                   {currentPlan === 'FREE' ? (
@@ -166,22 +166,34 @@ export default function BillingSettingsPage() {
                 </Card>
 
                 {/* Pro Plan */}
-                <Card className="bg-gradient-to-b from-blue-900/20 to-slate-900/50 border-blue-500/50 relative overflow-hidden">
-                  <div className="absolute top-0 right-0 bg-blue-500 text-white px-3 py-1 text-xs font-medium">
-                    POPULAR
+                <Card className="border-blue-500 bg-slate-900/90 relative overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-purple-500/20 -z-10"></div>
+                  <div className="absolute top-0 right-0 bg-gradient-to-r from-orange-500 to-red-500 text-white px-3 py-1 text-xs font-bold">
+                    BLACK FRIDAY
                   </div>
                   <CardHeader>
                     <CardTitle className="text-white flex items-center gap-2">
                       <Zap className="h-5 w-5 text-blue-400" />
                       MoneyMap Pro
                     </CardTitle>
-                    <div className="text-3xl font-bold text-white">
-                      €4.99
-                      <span className="text-lg text-slate-400 font-normal">/month</span>
+                    <div className="flex items-baseline gap-3">
+                      <div className="text-3xl font-bold text-white">
+                        €2.99
+                        <span className="text-lg text-slate-400 font-normal">/month</span>
+                      </div>
+                      <div className="text-xl text-slate-500 line-through">
+                        €4.99
+                      </div>
                     </div>
-                    <CardDescription className="text-slate-400">
-                      or €39/year (save 34%)
-                    </CardDescription>
+                    <div className="flex items-baseline gap-2">
+                      <CardDescription className="text-slate-400">
+                        or <span className="text-white font-semibold">€19/year</span>
+                      </CardDescription>
+                      <span className="text-slate-500 text-sm line-through">€39/year</span>
+                      <span className="bg-green-500/20 text-green-400 text-xs font-bold px-2 py-1 rounded">
+                        SAVE 51%
+                      </span>
+                    </div>
                   </CardHeader>
                   <CardContent className="space-y-4">
                     <ul className="space-y-3">
@@ -219,7 +231,7 @@ export default function BillingSettingsPage() {
                         {isLoading ? (
                           <Loader2 className="h-4 w-4 animate-spin" />
                         ) : (
-                          'Monthly €4.99'
+                          'Monthly €2.99'
                         )}
                       </Button>
                       <Button 
@@ -231,7 +243,7 @@ export default function BillingSettingsPage() {
                         {isLoading ? (
                           <Loader2 className="h-4 w-4 animate-spin" />
                         ) : (
-                          'Yearly €39'
+                          'Yearly €19'
                         )}
                       </Button>
                     </div>
@@ -256,11 +268,11 @@ export default function BillingSettingsPage() {
                   <div className="p-4 bg-slate-800/50 rounded-lg">
                     <div className="flex justify-between items-center mb-2">
                       <span className="text-slate-400">Next billing date</span>
-                      <span className="text-white">December 21, 2025</span>
+                      <span className="text-white">{periodEnd || 'Loading...'}</span>
                     </div>
                     <div className="flex justify-between items-center">
                       <span className="text-slate-400">Amount</span>
-                      <span className="text-white">€4.99</span>
+                      <span className="text-white">€2.99 - €19</span>
                     </div>
                   </div>
                   <Button 
