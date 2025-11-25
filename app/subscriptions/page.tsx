@@ -12,6 +12,7 @@ import { Plus, Trash2, Search, TrendingUp, Calendar, DollarSign } from 'lucide-r
 import { formatCurrency, convertToMonthly } from '@/lib/utils'
 import UpgradeModal from '@/components/UpgradeModal'
 import Header from '@/components/Header'
+import UpgradeButtonClient from '@/components/UpgradeButtonClient'
 import { toast } from 'sonner'
 import { motion } from 'framer-motion'
 
@@ -462,6 +463,9 @@ export default function SubscriptionsPage() {
         feature="subscription"
         message="You've reached the Free tier limit of 5 subscriptions. Upgrade to Pro to track unlimited subscriptions and discover hidden costs."
       />
+
+      {/* Floating Upgrade Button */}
+      <UpgradeButtonClient />
     </div>
   )
 }

@@ -13,6 +13,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Plus, Trash2, Edit, DollarSign, CreditCard, TrendingUp } from 'lucide-react'
 import { formatCurrency, convertToMonthly } from '@/lib/utils'
 import Header from '@/components/Header'
+import UpgradeButtonClient from '@/components/UpgradeButtonClient'
 import { toast } from 'sonner'
 
 type Income = {
@@ -481,6 +482,9 @@ export default function BudgetPage() {
           </TabsContent>
         </Tabs>
       </main>
+
+      {/* Floating Upgrade Button */}
+      <UpgradeButtonClient />
     </div>
   )
 }

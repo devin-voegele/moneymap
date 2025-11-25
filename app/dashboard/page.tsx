@@ -6,10 +6,11 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
-import { DollarSign, CreditCard, Target, TrendingUp } from 'lucide-react'
+import { DollarSign, CreditCard, Target, TrendingUp, Zap } from 'lucide-react'
 import { formatCurrency, convertToMonthly, getGoalProgress, getGoalStatus } from '@/lib/utils'
 import BudgetChart from '@/components/BudgetChart'
 import Header from '@/components/Header'
+import UpgradeButton from '@/components/UpgradeButton'
 
 export default async function DashboardPage() {
   const session = await getServerSession(authOptions)
@@ -18,13 +19,16 @@ export default async function DashboardPage() {
     redirect('/auth/sign-in')
   }
 
-  // Fetch all data
-  const [incomes, fixedCosts, subscriptions, goals] = await Promise.all([
+  // Fetch all data including user profile for plan check
+  const [incomes, fixedCosts, subscriptions, goals, user] = await Promise.all([
     prisma.income.findMany({ where: { userId: session.user.id } }),
     prisma.fixedCost.findMany({ where: { userId: session.user.id } }),
     prisma.subscription.findMany({ where: { userId: session.user.id } }),
     prisma.goal.findMany({ where: { userId: session.user.id }, take: 3, orderBy: { createdAt: 'desc' } }),
+    prisma.user.findUnique({ where: { id: session.user.id }, select: { plan: true } }),
   ])
+
+  const isFreePlan = user?.plan === 'FREE' || !user?.plan
 
   // Calculate totals
   const totalIncome = incomes.reduce((sum, inc) => sum + convertToMonthly(inc.amount, inc.frequency), 0)
@@ -259,6 +263,9 @@ export default async function DashboardPage() {
           </Card>
         )}
       </main>
+
+      {/* Floating Upgrade Button - Only for Free Users */}
+      {isFreePlan && <UpgradeButton />}
     </div>
   )
 }

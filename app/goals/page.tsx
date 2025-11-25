@@ -11,6 +11,7 @@ import { Progress } from '@/components/ui/progress'
 import { Plus, Trash2, Target, TrendingUp, Calendar, Edit } from 'lucide-react'
 import { formatCurrency, getGoalProgress, getGoalStatus } from '@/lib/utils'
 import Header from '@/components/Header'
+import UpgradeButtonClient from '@/components/UpgradeButtonClient'
 import { toast } from 'sonner'
 
 type Goal = {
@@ -404,6 +405,9 @@ export default function GoalsPage() {
           </Card>
         )}
       </main>
+
+      {/* Floating Upgrade Button */}
+      <UpgradeButtonClient />
     </div>
   )
 }
