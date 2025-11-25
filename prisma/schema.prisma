@@ -46,6 +46,8 @@ model User {
   chats                ChatSession[]
   accounts             Account[]
   sessions             Session[]
+  achievements         Achievement[]
+  streak               Streak?
   
   stripeCustomerId     String?
   stripePriceId        String?
@@ -191,4 +193,29 @@ model ChatMessage {
   createdAt DateTime    @default(now())
 
   @@map("chat_messages")
+}
+
+model Achievement {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type        String   // e.g., "first_goal", "savings_streak_7", "budget_master"
+  title       String
+  description String
+  icon        String
+  unlockedAt  DateTime @default(now())
+
+  @@map("achievements")
+}
+
+model Streak {
+  id             String   @id @default(cuid())
+  userId         String   @unique
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  currentStreak  Int      @default(0)
+  longestStreak  Int      @default(0)
+  lastActiveDate DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@map("streaks")
 }

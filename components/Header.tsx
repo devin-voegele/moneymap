@@ -17,6 +17,7 @@ export default function Header() {
     { href: '/budget', label: 'Budget' },
     { href: '/subscriptions', label: 'Subscriptions' },
     { href: '/goals', label: 'Goals' },
+    { href: '/analytics', label: 'Analytics' },
     { href: '/coach', label: 'Coach' },
   ]
 
