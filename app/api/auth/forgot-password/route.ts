@@ -2,8 +2,8 @@ import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { resend, FROM_EMAIL } from '@/lib/resend'
 import { PasswordResetEmail } from '@/lib/emails/PasswordReset'
-import { renderToString } from 'react-dom/server'
 import crypto from 'crypto'
+import { render } from '@react-email/components'
 
 export async function POST(req: Request) {
   try {
@@ -48,7 +48,7 @@ export async function POST(req: Request) {
     const resetLink = `${process.env.NEXTAUTH_URL}/auth/reset-password?token=${token}`
 
     // Render email HTML
-    const emailHtml = renderToString(
+    const emailHtml = await render(
       PasswordResetEmail({
         name: user.name || 'there',
         resetLink,

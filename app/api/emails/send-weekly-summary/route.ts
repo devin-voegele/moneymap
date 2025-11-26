@@ -3,7 +3,7 @@ import { prisma } from '@/lib/prisma'
 import { resend, FROM_EMAIL } from '@/lib/resend'
 import { WeeklySummaryEmail } from '@/lib/emails/WeeklySummary'
 import { convertToMonthly } from '@/lib/utils'
-import { renderToString } from 'react-dom/server'
+import { render } from '@react-email/components'
 
 export async function POST(req: Request) {
   try {
@@ -50,7 +50,7 @@ export async function POST(req: Request) {
     const savingsRate = totalIncome > 0 ? ((freeMoney / totalIncome) * 100) : 0
 
     // Render email HTML
-    const emailHtml = renderToString(
+    const emailHtml = await render(
       WeeklySummaryEmail({
         name: user.name || 'there',
         totalIncome,
