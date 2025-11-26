@@ -60,9 +60,6 @@ model User {
   weeklyEmailEnabled   Boolean   @default(true)
   goalEmailsEnabled    Boolean   @default(true)
   subscriptionReminders Boolean  @default(true)
-  
-  onboardingCompleted  Boolean   @default(false)
-  onboardingStep       Int       @default(0)
 
   @@map("users")
 }

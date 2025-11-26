@@ -92,7 +92,6 @@
     @apply bg-background text-foreground;
   }
 }
-
 /* Light/Dark Mode Utility Classes */
 @layer utilities {
   /* Background colors */

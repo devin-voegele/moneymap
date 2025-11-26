@@ -155,37 +155,37 @@ export default function AnalyticsPage() {
         {/* Best/Worst Months */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
           {bestMonth && (
-            <Card className="bg-gradient-to-br from-green-900/20 to-slate-900/50 border-green-500/30">
+            <Card className="bg-gradient-to-br from-green-500/10 to-emerald-500/5 dark:from-green-900/20 dark:to-slate-900/50 border-green-500/30">
               <CardHeader>
-                <CardTitle className="text-white flex items-center gap-2">
-                  <Award className="h-5 w-5 text-green-500" />
+                <CardTitle className="text-gray-900 dark:text-white flex items-center gap-2">
+                  <Award className="h-5 w-5 text-green-600 dark:text-green-500" />
                   Best Savings Month
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-3xl font-bold text-green-400">{bestMonth.month}</div>
-                <p className="text-slate-300 mt-2">
-                  Saved <span className="font-semibold text-white">{formatCurrency(bestMonth.saved)}</span>
+                <div className="text-3xl font-bold text-green-600 dark:text-green-400">{bestMonth.month}</div>
+                <p className="text-gray-700 dark:text-slate-300 mt-2">
+                  Saved <span className="font-semibold text-gray-900 dark:text-white">{formatCurrency(bestMonth.saved)}</span>
                 </p>
-                <p className="text-xs text-slate-400 mt-1">Keep up the great work! 🎉</p>
+                <p className="text-xs text-gray-600 dark:text-slate-400 mt-1">Keep up the great work! 🎉</p>
               </CardContent>
             </Card>
           )}
 
           {worstMonth && (
-            <Card className="bg-gradient-to-br from-red-900/20 to-slate-900/50 border-red-500/30">
+            <Card className="bg-gradient-to-br from-red-500/10 to-orange-500/5 dark:from-red-900/20 dark:to-slate-900/50 border-red-500/30">
               <CardHeader>
-                <CardTitle className="text-white flex items-center gap-2">
-                  <Calendar className="h-5 w-5 text-red-500" />
+                <CardTitle className="text-gray-900 dark:text-white flex items-center gap-2">
+                  <Calendar className="h-5 w-5 text-red-600 dark:text-red-500" />
                   Highest Spending Month
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-3xl font-bold text-red-400">{worstMonth.month}</div>
-                <p className="text-slate-300 mt-2">
-                  Spent <span className="font-semibold text-white">{formatCurrency(worstMonth.spent)}</span>
+                <div className="text-3xl font-bold text-red-600 dark:text-red-400">{worstMonth.month}</div>
+                <p className="text-gray-700 dark:text-slate-300 mt-2">
+                  Spent <span className="font-semibold text-gray-900 dark:text-white">{formatCurrency(worstMonth.spent)}</span>
                 </p>
-                <p className="text-xs text-slate-400 mt-1">Watch out for similar patterns</p>
+                <p className="text-xs text-gray-600 dark:text-slate-400 mt-1">Watch out for similar patterns</p>
               </CardContent>
             </Card>
           )}
