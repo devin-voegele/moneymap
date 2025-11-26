@@ -55,6 +55,11 @@ model User {
   plan                 Plan      @default(FREE)
   monthlyAiRequests    Int       @default(0)
   aiRequestsResetAt    DateTime  @default(now())
+  
+  emailNotifications   Boolean   @default(true)
+  weeklyEmailEnabled   Boolean   @default(true)
+  goalEmailsEnabled    Boolean   @default(true)
+  subscriptionReminders Boolean  @default(true)
 
   @@map("users")
 }

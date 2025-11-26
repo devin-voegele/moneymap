@@ -4,9 +4,10 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
-import { PieChart, LogOut, Settings, Menu, X } from 'lucide-react'
+import { PieChart, Menu, X, Settings, LogOut } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import NProgress from 'nprogress'
+import { ThemeToggle } from '@/components/ThemeToggle'
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -60,6 +61,7 @@ export default function Header() {
 
             {/* Desktop Actions */}
             <div className="hidden md:flex items-center gap-4">
+              <ThemeToggle />
               <Link href="/settings/profile">
                 <Button variant="outline" size="sm">
                   <Settings className="h-4 w-4" />

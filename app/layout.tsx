@@ -4,6 +4,7 @@ import './globals.css'
 import Providers from '@/components/Providers'
 import { Toaster } from 'sonner'
 import NavigationProgress from '@/components/NavigationProgress'
+import { ThemeProvider } from '@/components/ThemeProvider'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -94,9 +95,16 @@ export default function RootLayout({
         <meta name="theme-color" content="#3b82f6" />
       </head>
       <body className={inter.className}>
-        <NavigationProgress />
-        <Providers>{children}</Providers>
-        <Toaster position="top-right" richColors />
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <NavigationProgress />
+          <Providers>{children}</Providers>
+          <Toaster position="top-right" richColors />
+        </ThemeProvider>
       </body>
     </html>
   )
