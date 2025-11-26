@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { PieChart, LogOut, Settings, Send, Loader2, Sparkles } from 'lucide-react'
+import { PieChart, LogOut, Settings, Send, Loader2, Sparkles, Plus, MessageSquare, Trash2, Menu, X } from 'lucide-react'
 import ReactMarkdown from 'react-markdown'
 import { toast } from 'sonner'
 import Header from '@/components/Header'
@@ -14,26 +14,45 @@ type Message = {
   content: string
 }
 
+type Conversation = {
+  id: string
+  title: string
+  createdAt: string
+  updatedAt: string
+}
+
 export default function CoachPage() {
   const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [userPlan, setUserPlan] = useState<'FREE' | 'PRO'>('FREE')
   const [aiUsage, setAiUsage] = useState({ used: 0, limit: 5 })
+  const [conversations, setConversations] = useState<Conversation[]>([])
+  const [currentConversationId, setCurrentConversationId] = useState<string | null>(null)
+  const [sidebarOpen, setSidebarOpen] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
-  // Fetch user plan and usage
+  // Fetch user plan, usage, and conversations
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const res = await fetch('/api/profile')
-        if (res.ok) {
-          const data = await res.json()
+        const [profileRes, conversationsRes] = await Promise.all([
+          fetch('/api/profile'),
+          fetch('/api/coach/conversations')
+        ])
+        
+        if (profileRes.ok) {
+          const data = await profileRes.json()
           setUserPlan(data.plan || 'FREE')
           setAiUsage({
             used: data.monthlyAiRequests || 0,
             limit: 5
           })
+        }
+
+        if (conversationsRes.ok) {
+          const data = await conversationsRes.json()
+          setConversations(data.conversations || [])
         }
       } catch (error) {
         console.error('Failed to fetch user data:', error)
@@ -130,6 +149,9 @@ export default function CoachPage() {
       } else {
         setMessages(prev => [...prev, { role: 'assistant', content: data.response }])
       }
+
+      // Auto-save conversation after successful response
+      await saveConversation()
     } catch (error: any) {
       console.error('Error:', error)
       toast.error('Something went wrong', {
@@ -141,6 +163,87 @@ export default function CoachPage() {
       }])
     } finally {
       setIsLoading(false)
+    }
+  }
+
+  const saveConversation = async () => {
+    if (messages.length === 0) return
+
+    try {
+      if (!currentConversationId) {
+        // Create new conversation
+        const res = await fetch('/api/coach/conversations', {
+          method: 'POST'
+        })
+        const data = await res.json()
+        const newId = data.conversation.id
+        setCurrentConversationId(newId)
+
+        // Generate title from first message
+        const title = messages[0]?.content.slice(0, 50) + (messages[0]?.content.length > 50 ? '...' : '')
+        
+        // Save messages
+        await fetch(`/api/coach/conversations/${newId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ messages, title })
+        })
+
+        // Refresh conversations list
+        const conversationsRes = await fetch('/api/coach/conversations')
+        if (conversationsRes.ok) {
+          const data = await conversationsRes.json()
+          setConversations(data.conversations || [])
+        }
+      } else {
+        // Update existing conversation
+        await fetch(`/api/coach/conversations/${currentConversationId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ messages })
+        })
+      }
+    } catch (error) {
+      console.error('Failed to save conversation:', error)
+    }
+  }
+
+  const handleNewChat = () => {
+    setMessages([])
+    setCurrentConversationId(null)
+    setSidebarOpen(false)
+  }
+
+  const handleLoadConversation = async (id: string) => {
+    try {
+      const res = await fetch(`/api/coach/conversations/${id}`)
+      if (res.ok) {
+        const data = await res.json()
+        setMessages(data.conversation.messages || [])
+        setCurrentConversationId(id)
+        setSidebarOpen(false)
+      }
+    } catch (error) {
+      console.error('Failed to load conversation:', error)
+      toast.error('Failed to load conversation')
+    }
+  }
+
+  const handleDeleteConversation = async (id: string) => {
+    try {
+      const res = await fetch(`/api/coach/conversations/${id}`, {
+        method: 'DELETE'
+      })
+      if (res.ok) {
+        setConversations(prev => prev.filter(c => c.id !== id))
+        if (currentConversationId === id) {
+          handleNewChat()
+        }
+        toast.success('Conversation deleted')
+      }
+    } catch (error) {
+      console.error('Failed to delete conversation:', error)
+      toast.error('Failed to delete conversation')
     }
   }
 
@@ -160,7 +263,63 @@ export default function CoachPage() {
       <Header />
 
       {/* Main Content */}
-      <main className="flex-1 container mx-auto px-4 py-6 flex flex-col max-w-7xl">
+      <main className="flex-1 container mx-auto px-4 py-6 flex gap-4 max-w-7xl">
+        {/* Sidebar - Chat History */}
+        <div className={`${sidebarOpen ? 'block' : 'hidden'} md:block w-full md:w-64 flex-shrink-0`}>
+          <div className="bg-slate-900/50 border border-slate-700 rounded-lg p-4 h-full flex flex-col">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-white font-semibold">Chats</h3>
+              <Button size="sm" onClick={handleNewChat} className="h-8">
+                <Plus className="h-4 w-4" />
+              </Button>
+            </div>
+            
+            <div className="flex-1 overflow-y-auto space-y-2">
+              {conversations.length === 0 ? (
+                <p className="text-slate-500 text-sm text-center py-8">
+                  No conversations yet
+                </p>
+              ) : (
+                conversations.map((conv) => (
+                  <div
+                    key={conv.id}
+                    className={`group p-3 rounded-lg cursor-pointer transition ${
+                      currentConversationId === conv.id
+                        ? 'bg-blue-500/20 border border-blue-500/30'
+                        : 'bg-slate-800/50 hover:bg-slate-800 border border-transparent'
+                    }`}
+                  >
+                    <div className="flex items-start justify-between gap-2">
+                      <div 
+                        className="flex-1 min-w-0"
+                        onClick={() => handleLoadConversation(conv.id)}
+                      >
+                        <p className="text-white text-sm truncate">
+                          {conv.title}
+                        </p>
+                        <p className="text-slate-500 text-xs mt-1">
+                          {new Date(conv.updatedAt).toLocaleDateString()}
+                        </p>
+                      </div>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          handleDeleteConversation(conv.id)
+                        }}
+                        className="opacity-0 group-hover:opacity-100 transition text-slate-400 hover:text-red-400"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </button>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Chat Area */}
+        <div className="flex-1 flex flex-col min-w-0">
         {/* Usage Indicator for Free Users */}
         {userPlan === 'FREE' && (
           <div className="mb-4 p-4 bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-blue-500/20 rounded-lg">
@@ -301,6 +460,7 @@ export default function CoachPage() {
               </div>
             </div>
           </div>
+        </div>
       </main>
     </div>
   )
