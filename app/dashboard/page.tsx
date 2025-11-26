@@ -11,6 +11,7 @@ import { formatCurrency, convertToMonthly, getGoalProgress, getGoalStatus } from
 import BudgetChart from '@/components/BudgetChart'
 import Header from '@/components/Header'
 import UpgradeButton from '@/components/UpgradeButton'
+import DashboardClient from '@/components/DashboardClient'
 
 export default async function DashboardPage() {
   const session = await getServerSession(authOptions)
@@ -19,16 +20,17 @@ export default async function DashboardPage() {
     redirect('/auth/sign-in')
   }
 
-  // Fetch all data including user profile for plan check
+  // Fetch all data including user profile for plan check and onboarding status
   const [incomes, fixedCosts, subscriptions, goals, user] = await Promise.all([
     prisma.income.findMany({ where: { userId: session.user.id } }),
     prisma.fixedCost.findMany({ where: { userId: session.user.id } }),
     prisma.subscription.findMany({ where: { userId: session.user.id } }),
     prisma.goal.findMany({ where: { userId: session.user.id }, take: 3, orderBy: { createdAt: 'desc' } }),
-    prisma.user.findUnique({ where: { id: session.user.id }, select: { plan: true } }),
+    prisma.user.findUnique({ where: { id: session.user.id }, select: { plan: true, onboardingCompleted: true } }),
   ])
 
   const isFreePlan = user?.plan === 'FREE' || !user?.plan
+  const needsOnboarding = !user?.onboardingCompleted
 
   // Calculate totals
   const totalIncome = incomes.reduce((sum, inc) => sum + convertToMonthly(inc.amount, inc.frequency), 0)
@@ -44,14 +46,15 @@ export default async function DashboardPage() {
   ].filter(item => item.value > 0)
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950">
-      <Header />
+    <DashboardClient needsOnboarding={needsOnboarding}>
+      <div className="min-h-screen bg-gradient-to-b from-gray-50 via-white to-gray-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
+        <Header />
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-white mb-2">Dashboard</h1>
-          <p className="text-slate-400">Your financial overview at a glance</p>
+          <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">Dashboard</h1>
+          <p className="text-gray-600 dark:text-slate-400">Your financial overview at a glance</p>
         </div>
 
         {/* Quick Stats */}
@@ -266,6 +269,7 @@ export default async function DashboardPage() {
 
       {/* Floating Upgrade Button - Only for Free Users */}
       {isFreePlan && <UpgradeButton />}
-    </div>
+      </div>
+    </DashboardClient>
   )
 }
