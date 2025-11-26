@@ -23,6 +23,56 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Message is required' }, { status: 400 })
     }
 
+    // Fetch user and check plan
+    const user = await prisma.user.findUnique({
+      where: { id: session.user.id },
+      select: { 
+        plan: true, 
+        monthlyAiRequests: true, 
+        aiRequestsResetAt: true 
+      }
+    })
+
+    if (!user) {
+      return NextResponse.json({ error: 'User not found' }, { status: 404 })
+    }
+
+    // Check if FREE tier and enforce limits
+    if (user.plan === 'FREE') {
+      // Reset counter if it's a new month
+      const now = new Date()
+      const resetDate = new Date(user.aiRequestsResetAt)
+      
+      if (now > resetDate) {
+        // Reset the counter
+        await prisma.user.update({
+          where: { id: session.user.id },
+          data: {
+            monthlyAiRequests: 0,
+            aiRequestsResetAt: new Date(now.getFullYear(), now.getMonth() + 1, 1)
+          }
+        })
+        user.monthlyAiRequests = 0
+      }
+
+      // Check if limit reached (5 questions per month for free tier)
+      const FREE_TIER_LIMIT = 5
+      if (user.monthlyAiRequests >= FREE_TIER_LIMIT) {
+        return NextResponse.json({ 
+          error: 'FREE_TIER_LIMIT',
+          message: `You've reached your limit of ${FREE_TIER_LIMIT} AI coach questions this month. Upgrade to Pro for unlimited questions!`,
+          limit: FREE_TIER_LIMIT,
+          used: user.monthlyAiRequests
+        }, { status: 403 })
+      }
+
+      // Increment counter for free users
+      await prisma.user.update({
+        where: { id: session.user.id },
+        data: { monthlyAiRequests: { increment: 1 } }
+      })
+    }
+
     // Fetch ALL user data to build context
     const [profile, incomes, fixedCosts, subscriptions, goals] = await Promise.all([
       prisma.profile.findUnique({ where: { userId: session.user.id } }),

@@ -18,7 +18,29 @@ export default function CoachPage() {
   const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const [userPlan, setUserPlan] = useState<'FREE' | 'PRO'>('FREE')
+  const [aiUsage, setAiUsage] = useState({ used: 0, limit: 5 })
   const messagesEndRef = useRef<HTMLDivElement>(null)
+
+  // Fetch user plan and usage
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const res = await fetch('/api/profile')
+        if (res.ok) {
+          const data = await res.json()
+          setUserPlan(data.plan || 'FREE')
+          setAiUsage({
+            used: data.monthlyAiRequests || 0,
+            limit: 5
+          })
+        }
+      } catch (error) {
+        console.error('Failed to fetch user data:', error)
+      }
+    }
+    fetchUserData()
+  }, [])
 
   // Auto-scroll to bottom when messages change
   useEffect(() => {
@@ -68,7 +90,13 @@ export default function CoachPage() {
           duration: 5000
         })
         setMessages(prev => prev.slice(0, -1)) // Remove the user message
+        setAiUsage({ used: data.limit, limit: data.limit })
         return
+      }
+
+      // Update usage count for free users
+      if (userPlan === 'FREE') {
+        setAiUsage(prev => ({ ...prev, used: prev.used + 1 }))
       }
 
       if (!res.ok) {
@@ -133,6 +161,39 @@ export default function CoachPage() {
 
       {/* Main Content */}
       <main className="flex-1 container mx-auto px-4 py-6 flex flex-col max-w-7xl">
+        {/* Usage Indicator for Free Users */}
+        {userPlan === 'FREE' && (
+          <div className="mb-4 p-4 bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-blue-500/20 rounded-lg">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <Sparkles className="h-5 w-5 text-blue-400" />
+                <div>
+                  <p className="text-white font-medium">
+                    {aiUsage.used}/{aiUsage.limit} AI questions used this month
+                  </p>
+                  <p className="text-slate-400 text-sm">
+                    {aiUsage.used >= aiUsage.limit 
+                      ? 'Upgrade to Pro for unlimited questions!' 
+                      : `${aiUsage.limit - aiUsage.used} questions remaining`}
+                  </p>
+                </div>
+              </div>
+              <Link href="/settings/billing">
+                <Button size="sm" className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
+                  Upgrade to Pro
+                </Button>
+              </Link>
+            </div>
+            {/* Progress Bar */}
+            <div className="mt-3 w-full bg-slate-800 rounded-full h-2">
+              <div 
+                className="bg-gradient-to-r from-blue-500 to-purple-500 h-2 rounded-full transition-all duration-300"
+                style={{ width: `${(aiUsage.used / aiUsage.limit) * 100}%` }}
+              />
+            </div>
+          </div>
+        )}
+
         {/* Chat Container - Full Height */}
         <div className="flex-1 bg-slate-900/50 border border-slate-700 rounded-lg flex flex-col overflow-hidden">
             {/* Messages */}
