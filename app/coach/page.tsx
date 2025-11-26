@@ -30,6 +30,7 @@ export default function CoachPage() {
   const [conversations, setConversations] = useState<Conversation[]>([])
   const [currentConversationId, setCurrentConversationId] = useState<string | null>(null)
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [isLoadingConversations, setIsLoadingConversations] = useState(true)
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
   // Fetch user plan, usage, and conversations
@@ -56,6 +57,8 @@ export default function CoachPage() {
         }
       } catch (error) {
         console.error('Failed to fetch user data:', error)
+      } finally {
+        setIsLoadingConversations(false)
       }
     }
     fetchUserData()
@@ -264,8 +267,16 @@ export default function CoachPage() {
 
       {/* Main Content */}
       <main className="flex-1 container mx-auto px-4 py-6 flex gap-4 max-w-7xl">
+        {/* Mobile Menu Button */}
+        <button
+          onClick={() => setSidebarOpen(!sidebarOpen)}
+          className="md:hidden fixed bottom-20 right-4 z-50 bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-full shadow-lg"
+        >
+          {sidebarOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+        </button>
+
         {/* Sidebar - Chat History */}
-        <div className={`${sidebarOpen ? 'block' : 'hidden'} md:block w-full md:w-64 flex-shrink-0`}>
+        <div className={`${sidebarOpen ? 'fixed inset-0 z-40 bg-slate-950/95 p-4' : 'hidden'} md:relative md:block md:w-64 md:flex-shrink-0 md:bg-transparent md:p-0`}>
           <div className="bg-slate-900/50 border border-slate-700 rounded-lg p-4 h-full flex flex-col">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-white font-semibold">Chats</h3>
@@ -275,7 +286,11 @@ export default function CoachPage() {
             </div>
             
             <div className="flex-1 overflow-y-auto space-y-2">
-              {conversations.length === 0 ? (
+              {isLoadingConversations ? (
+                <div className="flex items-center justify-center py-8">
+                  <Loader2 className="h-6 w-6 animate-spin text-slate-500" />
+                </div>
+              ) : conversations.length === 0 ? (
                 <p className="text-slate-500 text-sm text-center py-8">
                   No conversations yet
                 </p>
