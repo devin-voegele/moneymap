@@ -56,57 +56,65 @@ export default async function DashboardPage() {
 
         {/* Quick Stats */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <Card className="bg-slate-900/50 border-slate-700">
+          <Card className="bg-gradient-to-br from-green-500/10 to-emerald-500/5 border-green-500/20 hover:border-green-500/40 transition-all">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-slate-400">
+              <CardTitle className="text-sm font-medium text-slate-300">
                 Total Income
               </CardTitle>
-              <DollarSign className="h-4 w-4 text-green-500" />
+              <div className="p-2 bg-green-500/20 rounded-lg">
+                <DollarSign className="h-5 w-5 text-green-400" />
+              </div>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-white">{formatCurrency(totalIncome)}</div>
-              <p className="text-xs text-slate-500">per month</p>
+              <div className="text-3xl font-bold text-white">{formatCurrency(totalIncome)}</div>
+              <p className="text-xs text-green-400 mt-1">per month</p>
             </CardContent>
           </Card>
 
-          <Card className="bg-slate-900/50 border-slate-700">
+          <Card className="bg-gradient-to-br from-orange-500/10 to-amber-500/5 border-orange-500/20 hover:border-orange-500/40 transition-all">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-slate-400">
+              <CardTitle className="text-sm font-medium text-slate-300">
                 Fixed Costs
               </CardTitle>
-              <CreditCard className="h-4 w-4 text-orange-500" />
+              <div className="p-2 bg-orange-500/20 rounded-lg">
+                <CreditCard className="h-5 w-5 text-orange-400" />
+              </div>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-white">{formatCurrency(totalFixedCosts)}</div>
-              <p className="text-xs text-slate-500">per month</p>
+              <div className="text-3xl font-bold text-white">{formatCurrency(totalFixedCosts)}</div>
+              <p className="text-xs text-orange-400 mt-1">per month</p>
             </CardContent>
           </Card>
 
-          <Card className="bg-slate-900/50 border-slate-700">
+          <Card className="bg-gradient-to-br from-red-500/10 to-rose-500/5 border-red-500/20 hover:border-red-500/40 transition-all">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-slate-400">
+              <CardTitle className="text-sm font-medium text-slate-300">
                 Subscriptions
               </CardTitle>
-              <CreditCard className="h-4 w-4 text-red-500" />
+              <div className="p-2 bg-red-500/20 rounded-lg">
+                <CreditCard className="h-5 w-5 text-red-400" />
+              </div>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-white">{formatCurrency(totalSubscriptions)}</div>
-              <p className="text-xs text-slate-500">per month</p>
+              <div className="text-3xl font-bold text-white">{formatCurrency(totalSubscriptions)}</div>
+              <p className="text-xs text-red-400 mt-1">per month</p>
             </CardContent>
           </Card>
 
-          <Card className="bg-slate-900/50 border-slate-700">
+          <Card className="bg-gradient-to-br from-blue-500/10 to-cyan-500/5 border-blue-500/20 hover:border-blue-500/40 transition-all">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-slate-400">
+              <CardTitle className="text-sm font-medium text-slate-300">
                 Free Money
               </CardTitle>
-              <Target className="h-4 w-4 text-blue-500" />
+              <div className="p-2 bg-blue-500/20 rounded-lg">
+                <Zap className="h-5 w-5 text-blue-400" />
+              </div>
             </CardHeader>
             <CardContent>
-              <div className={`text-2xl font-bold ${freeMoney >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+              <div className={`text-3xl font-bold ${freeMoney >= 0 ? 'text-blue-400' : 'text-red-400'}`}>
                 {formatCurrency(freeMoney)}
               </div>
-              <p className="text-xs text-slate-500">per month</p>
+              <p className="text-xs text-blue-400 mt-1">per month</p>
             </CardContent>
           </Card>
         </div>

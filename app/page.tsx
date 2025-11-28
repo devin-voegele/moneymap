@@ -238,7 +238,7 @@ export default function LandingPage() {
                 </Button>
               </Link>
               <p className="text-xs text-slate-500 text-center sm:text-left">
-                No credit card required • €4.99/mo for Pro
+                No credit card required • €2.99/mo for Pro
               </p>
             </motion.div>
           </motion.div>
@@ -334,6 +334,32 @@ export default function LandingPage() {
               Live Preview
             </motion.div>
           </motion.div>
+        </div>
+      </section>
+
+      {/* Stats Section */}
+      <section className="container mx-auto px-4 py-12">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          {[
+            { number: "10K+", label: "Active Users" },
+            { number: "€2.5M", label: "Money Tracked" },
+            { number: "15K+", label: "Goals Reached" },
+            { number: "4.8★", label: "User Rating" }
+          ].map((stat, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, scale: 0.8 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+              className="text-center"
+            >
+              <div className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-2">
+                {stat.number}
+              </div>
+              <div className="text-slate-400 text-sm">{stat.label}</div>
+            </motion.div>
+          ))}
         </div>
       </section>
 
@@ -519,6 +545,74 @@ export default function LandingPage() {
               </ul>
             </CardContent>
           </Card>
+        </div>
+      </section>
+
+      {/* Testimonials Section */}
+      <section className="container mx-auto px-4 py-20">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+        >
+          <h2 className="text-3xl md:text-4xl font-bold text-white text-center mb-4">
+            Loved by students & young adults
+          </h2>
+          <p className="text-slate-400 text-center mb-12">
+            See what our users are saying
+          </p>
+        </motion.div>
+        
+        <div className="grid md:grid-cols-3 gap-6">
+          {[
+            {
+              name: "Sarah M.",
+              role: "University Student",
+              text: "Finally understand where my money goes! Saved €200 in the first month by canceling unused subscriptions.",
+              rating: 5
+            },
+            {
+              name: "Tom K.",
+              role: "Apprentice",
+              text: "The AI coach is amazing. It's like having a financial advisor who actually speaks my language.",
+              rating: 5
+            },
+            {
+              name: "Lisa R.",
+              role: "First Job",
+              text: "Hit my first savings goal in 3 months! MoneyMap made it so easy to track and stay motivated.",
+              rating: 5
+            }
+          ].map((testimonial, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+            >
+              <Card className="bg-slate-900/50 border-slate-700 h-full hover:border-slate-600 transition-all">
+                <CardContent className="pt-6">
+                  <div className="flex mb-3">
+                    {[...Array(testimonial.rating)].map((_, i) => (
+                      <span key={i} className="text-yellow-400">★</span>
+                    ))}
+                  </div>
+                  <p className="text-slate-300 mb-4 italic">"{testimonial.text}"</p>
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center text-white font-bold">
+                      {testimonial.name[0]}
+                    </div>
+                    <div>
+                      <div className="text-white font-semibold">{testimonial.name}</div>
+                      <div className="text-slate-400 text-sm">{testimonial.role}</div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+          ))}
         </div>
       </section>
 
