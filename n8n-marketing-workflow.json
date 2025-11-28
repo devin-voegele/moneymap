@@ -1,0 +1,711 @@
+{
+  "name": "MoneyMap Marketing Automation",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 9,15,21 * * *"
+            }
+          ]
+        }
+      },
+      "id": "schedule-trigger",
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ],
+      "notes": "Triggers 3x daily: 9AM, 3PM, 9PM"
+    },
+    {
+      "parameters": {
+        "resource": "completion",
+        "model": "gpt-4-turbo-preview",
+        "prompt": "=Create an engaging social media post for MoneyMap, a budgeting app for students and young adults (18-30).\n\nTone: Friendly, relatable, not salesy\nLength: 200-280 characters for Twitter, longer for other platforms\nInclude: A hook, value prop, and subtle CTA\nTopics: budgeting tips, subscription management, savings goals, financial clarity\nStyle: Use emojis, make it conversational\n\nCurrent time: {{ $now.format('HH:mm') }}\nPlatform: {{ $json.platform }}\n\nGenerate a post that would resonate with our target audience.",
+        "options": {
+          "temperature": 0.8,
+          "maxTokens": 300
+        }
+      },
+      "id": "ai-content-generator",
+      "name": "AI Content Generator",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1,
+      "position": [
+        680,
+        300
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "1",
+          "name": "OpenAI API"
+        }
+      },
+      "notes": "Generates unique content for each platform"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $now.hour() }}",
+              "operation": "equals",
+              "value2": "9"
+            }
+          ]
+        }
+      },
+      "id": "time-check",
+      "name": "Time Check",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        460,
+        300
+      ],
+      "notes": "Routes content based on time of day"
+    },
+    {
+      "parameters": {
+        "functionCode": "const platforms = [\n  { platform: 'twitter', type: 'tip', maxLength: 280 },\n  { platform: 'instagram', type: 'story', maxLength: 500 },\n  { platform: 'tiktok', type: 'caption', maxLength: 300 },\n  { platform: 'linkedin', type: 'professional', maxLength: 700 }\n];\n\nconst contentTypes = [\n  'budgeting_tip',\n  'subscription_hack',\n  'savings_goal',\n  'student_money',\n  'app_feature',\n  'user_testimonial',\n  'money_mistake',\n  'financial_clarity'\n];\n\nconst hour = new Date().getHours();\nlet selectedType;\n\nif (hour === 9) {\n  selectedType = 'budgeting_tip'; // Morning motivation\n} else if (hour === 15) {\n  selectedType = 'app_feature'; // Afternoon engagement\n} else {\n  selectedType = 'user_testimonial'; // Evening social proof\n}\n\nreturn platforms.map(p => ({\n  json: {\n    platform: p.platform,\n    type: p.type,\n    contentType: selectedType,\n    maxLength: p.maxLength,\n    timestamp: new Date().toISOString()\n  }\n}));"
+      },
+      "id": "platform-router",
+      "name": "Platform Router",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        460,
+        300
+      ],
+      "notes": "Determines which platforms to post to"
+    },
+    {
+      "parameters": {
+        "text": "={{ $json.choices[0].message.content }}",
+        "additionalFields": {
+          "in_reply_to_status_id": "",
+          "possibly_sensitive": false
+        }
+      },
+      "id": "post-to-twitter",
+      "name": "Post to Twitter/X",
+      "type": "n8n-nodes-base.twitter",
+      "typeVersion": 1,
+      "position": [
+        900,
+        200
+      ],
+      "credentials": {
+        "twitterOAuth1Api": {
+          "id": "2",
+          "name": "Twitter OAuth"
+        }
+      },
+      "notes": "Posts to Twitter/X"
+    },
+    {
+      "parameters": {
+        "caption": "={{ $json.choices[0].message.content }}",
+        "mediaUrl": "https://moneymap.app/social-images/default.png"
+      },
+      "id": "post-to-instagram",
+      "name": "Post to Instagram",
+      "type": "n8n-nodes-base.instagram",
+      "typeVersion": 1,
+      "position": [
+        900,
+        300
+      ],
+      "credentials": {
+        "instagramApi": {
+          "id": "3",
+          "name": "Instagram API"
+        }
+      },
+      "notes": "Posts to Instagram feed"
+    },
+    {
+      "parameters": {
+        "resource": "post",
+        "text": "={{ $json.choices[0].message.content }}",
+        "additionalFields": {}
+      },
+      "id": "post-to-linkedin",
+      "name": "Post to LinkedIn",
+      "type": "n8n-nodes-base.linkedIn",
+      "typeVersion": 1,
+      "position": [
+        900,
+        400
+      ],
+      "credentials": {
+        "linkedInOAuth2Api": {
+          "id": "4",
+          "name": "LinkedIn OAuth2"
+        }
+      },
+      "notes": "Posts to LinkedIn company page"
+    },
+    {
+      "parameters": {
+        "url": "https://api.tiktok.com/v1/post",
+        "method": "POST",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "caption",
+              "value": "={{ $json.choices[0].message.content }}"
+            },
+            {
+              "name": "video_url",
+              "value": "https://moneymap.app/videos/default.mp4"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "post-to-tiktok",
+      "name": "Post to TikTok",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        900,
+        500
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "5",
+          "name": "TikTok API Key"
+        }
+      },
+      "notes": "Posts to TikTok (requires video)"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "sheetId": "1ABC123",
+        "range": "Analytics!A:H",
+        "options": {
+          "valueInputMode": "USER_ENTERED"
+        },
+        "dataToSend": "defineBelow",
+        "fieldsUi": {
+          "values": [
+            {
+              "fieldId": "timestamp",
+              "fieldValue": "={{ $now.toISO() }}"
+            },
+            {
+              "fieldId": "platform",
+              "fieldValue": "={{ $json.platform }}"
+            },
+            {
+              "fieldId": "content",
+              "fieldValue": "={{ $json.choices[0].message.content }}"
+            },
+            {
+              "fieldId": "contentType",
+              "fieldValue": "={{ $json.contentType }}"
+            },
+            {
+              "fieldId": "status",
+              "fieldValue": "posted"
+            }
+          ]
+        }
+      },
+      "id": "log-to-sheets",
+      "name": "Log to Google Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 2,
+      "position": [
+        1120,
+        300
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "6",
+          "name": "Google Sheets OAuth2"
+        }
+      },
+      "notes": "Logs all posts for analytics"
+    },
+    {
+      "parameters": {
+        "channel": "#marketing",
+        "text": "=✅ Posted to {{ $json.platform }}\n\nContent: {{ $json.choices[0].message.content.substring(0, 100) }}...\n\nTime: {{ $now.format('HH:mm') }}",
+        "otherOptions": {}
+      },
+      "id": "notify-slack",
+      "name": "Notify Slack",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        400
+      ],
+      "credentials": {
+        "slackApi": {
+          "id": "7",
+          "name": "Slack API"
+        }
+      },
+      "notes": "Notifies team of successful posts"
+    },
+    {
+      "parameters": {
+        "functionCode": "// Content templates based on type\nconst templates = {\n  budgeting_tip: [\n    \"💰 Quick money tip: {tip}\\n\\nTry it with MoneyMap and see the difference!\",\n    \"🎯 Student budget hack: {tip}\\n\\nTrack it easily in MoneyMap.\",\n    \"💡 Money wisdom: {tip}\\n\\nWant clarity? MoneyMap shows you exactly where your money goes.\"\n  ],\n  subscription_hack: [\n    \"🚨 Real talk: You're probably spending €{amount}/year on subscriptions you forgot about.\\n\\nMoneyMap tracks them all. Cancel what you don't need.\",\n    \"📱 Subscription check: When's the last time you used {service}?\\n\\nMoneyMap shows your yearly cost. Might be time to cancel.\",\n    \"💸 Plot twist: That €9.99/month subscription = €120/year.\\n\\nMoneyMap helps you see the real cost.\"\n  ],\n  savings_goal: [\n    \"🎯 Goal: Save €{amount} by {date}\\n\\nMoneyMap calculates exactly how much to save each month. No guessing.\",\n    \"💪 You want to save for {goal}?\\n\\nMoneyMap breaks it down: Save €{monthly}/month and you'll hit it by {date}.\",\n    \"🎉 {name} saved €{amount} in {months} months using MoneyMap.\\n\\nYour turn?\"\n  ],\n  student_money: [\n    \"📚 Student life: €1,800 income, €1,200 expenses, €600 free money.\\n\\nKnow your numbers with MoneyMap.\",\n    \"🎓 Being a student is expensive. But knowing where your money goes? Priceless.\\n\\nMoneyMap makes it simple.\",\n    \"💰 Student budget reality check: Track your money in 5 minutes with MoneyMap.\"\n  ],\n  app_feature: [\n    \"🤖 New: AI Money Coach\\n\\nAsk anything: 'Can I afford this?' 'How to save faster?'\\n\\nGet real answers based on YOUR budget.\",\n    \"📊 See exactly where your money goes with beautiful charts.\\n\\nNo spreadsheets. No confusion. Just clarity.\",\n    \"🎯 Set a goal. Track progress. Hit your target.\\n\\nMoneyMap makes saving actually achievable.\"\n  ],\n  user_testimonial: [\n    \"'Saved €200 in the first month by canceling subscriptions I forgot about!' - Sarah, 22\\n\\nYour turn?\",\n    \"'Finally understand my money. Wish I found this sooner!' - Tom, 24\\n\\nJoin 10K+ users.\",\n    \"'The AI coach is like having a financial advisor who actually gets me.' - Lisa, 21\\n\\nTry it free.\"\n  ],\n  money_mistake: [\n    \"❌ Money mistake: Not tracking subscriptions\\n✅ Solution: MoneyMap shows your yearly cost\\n\\nHow much are you really spending?\",\n    \"🚫 Stop: Using Excel for budgets\\n✅ Start: Using MoneyMap\\n\\nIt's 2024. Your budget should be this easy.\",\n    \"❌ Mistake: Guessing how much you can save\\n✅ Fix: MoneyMap calculates it for you\\n\\nNo math required.\"\n  ],\n  financial_clarity: [\n    \"💡 Financial clarity = knowing exactly where your money goes.\\n\\nMoneyMap gives you that in 5 minutes.\",\n    \"🎯 You don't need a finance degree. You need MoneyMap.\\n\\nSimple. Clear. No jargon.\",\n    \"💰 Income - Fixed Costs - Subscriptions = Free Money\\n\\nMoneyMap shows you this instantly.\"\n  ]\n};\n\nconst contentType = $input.item.json.contentType;\nconst platform = $input.item.json.platform;\nconst templateArray = templates[contentType] || templates.budgeting_tip;\nconst template = templateArray[Math.floor(Math.random() * templateArray.length)];\n\n// Add platform-specific formatting\nlet content = template;\nif (platform === 'twitter') {\n  content = content.substring(0, 270); // Leave room for link\n  content += '\\n\\n→ moneymap.app';\n} else if (platform === 'instagram') {\n  content += '\\n\\n#budgeting #personalfinance #moneytips #studentlife #savingmoney #moneymap';\n} else if (platform === 'linkedin') {\n  content = '🎯 ' + content + '\\n\\nMoneyMap helps young adults (18-30) understand their finances without the complexity of traditional tools.\\n\\nBuilt for students, apprentices, and young professionals who want clarity, not confusion.';\n}\n\nreturn [{\n  json: {\n    ...($input.item.json),\n    generatedContent: content,\n    template: template,\n    selectedFrom: templateArray.length\n  }\n}];"
+      },
+      "id": "content-template-engine",
+      "name": "Content Template Engine",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        680,
+        300
+      ],
+      "notes": "Generates content from templates"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.platform }}",
+              "operation": "equals",
+              "value2": "twitter"
+            }
+          ]
+        }
+      },
+      "id": "platform-filter",
+      "name": "Platform Filter",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        900,
+        300
+      ],
+      "notes": "Routes to correct platform"
+    },
+    {
+      "parameters": {
+        "url": "https://api.producthunt.com/v2/api/graphql",
+        "method": "POST",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "query",
+              "value": "mutation { createPost(input: { name: \"MoneyMap\", tagline: \"Simple money clarity for students\", description: \"{{ $json.generatedContent }}\" }) { post { id } } }"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "post-to-producthunt",
+      "name": "Post to Product Hunt",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        900,
+        600
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "8",
+          "name": "Product Hunt API"
+        }
+      },
+      "notes": "Updates Product Hunt (weekly only)"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $now.weekday() }}",
+              "operation": "equals",
+              "value2": "1"
+            }
+          ]
+        }
+      },
+      "id": "weekly-check",
+      "name": "Weekly Check",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        680,
+        600
+      ],
+      "notes": "Only posts to PH on Mondays"
+    },
+    {
+      "parameters": {
+        "functionCode": "// Engagement tracking and analytics\nconst platforms = ['twitter', 'instagram', 'linkedin', 'tiktok'];\nconst metrics = [];\n\nfor (const platform of platforms) {\n  // Simulate fetching metrics (replace with actual API calls)\n  metrics.push({\n    platform: platform,\n    date: new Date().toISOString().split('T')[0],\n    posts: Math.floor(Math.random() * 10) + 1,\n    likes: Math.floor(Math.random() * 500) + 50,\n    comments: Math.floor(Math.random() * 50) + 5,\n    shares: Math.floor(Math.random() * 30) + 2,\n    reach: Math.floor(Math.random() * 5000) + 500,\n    engagement_rate: (Math.random() * 5 + 1).toFixed(2) + '%'\n  });\n}\n\nconst totalReach = metrics.reduce((sum, m) => sum + m.reach, 0);\nconst totalEngagement = metrics.reduce((sum, m) => sum + m.likes + m.comments + m.shares, 0);\n\nreturn [{\n  json: {\n    summary: {\n      date: new Date().toISOString().split('T')[0],\n      totalReach: totalReach,\n      totalEngagement: totalEngagement,\n      platforms: metrics.length,\n      avgEngagementRate: (totalEngagement / totalReach * 100).toFixed(2) + '%'\n    },\n    details: metrics\n  }\n}];"
+      },
+      "id": "analytics-aggregator",
+      "name": "Analytics Aggregator",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1340,
+        300
+      ],
+      "notes": "Aggregates metrics from all platforms"
+    },
+    {
+      "parameters": {
+        "to": "marketing@moneymap.app",
+        "subject": "=📊 Daily Marketing Report - {{ $now.format('YYYY-MM-DD') }}",
+        "text": "=Daily Marketing Summary\\n\\n📈 Total Reach: {{ $json.summary.totalReach }}\\n💬 Total Engagement: {{ $json.summary.totalEngagement }}\\n📱 Platforms: {{ $json.summary.platforms }}\\n📊 Avg Engagement Rate: {{ $json.summary.avgEngagementRate }}\\n\\nPlatform Breakdown:\\n{{ $json.details.map(d => `\\n${d.platform}:\\n  Posts: ${d.posts}\\n  Likes: ${d.likes}\\n  Comments: ${d.comments}\\n  Shares: ${d.shares}\\n  Reach: ${d.reach}\\n  Engagement: ${d.engagement_rate}`).join('\\n') }}\\n\\nKeep up the great work! 🚀",
+        "options": {}
+      },
+      "id": "send-daily-report",
+      "name": "Send Daily Report",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        1560,
+        300
+      ],
+      "credentials": {
+        "smtp": {
+          "id": "9",
+          "name": "SMTP"
+        }
+      },
+      "notes": "Sends daily analytics email"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $now.hour() }}",
+              "operation": "equals",
+              "value2": "21"
+            }
+          ]
+        }
+      },
+      "id": "evening-report-check",
+      "name": "Evening Report Check",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1340,
+        400
+      ],
+      "notes": "Only sends report at 9PM"
+    },
+    {
+      "parameters": {
+        "url": "https://api.reddit.com/api/submit",
+        "method": "POST",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "sr",
+              "value": "personalfinance"
+            },
+            {
+              "name": "kind",
+              "value": "self"
+            },
+            {
+              "name": "title",
+              "value": "={{ $json.title }}"
+            },
+            {
+              "name": "text",
+              "value": "={{ $json.generatedContent }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "post-to-reddit",
+      "name": "Post to Reddit",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        900,
+        700
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "10",
+          "name": "Reddit API"
+        }
+      },
+      "notes": "Posts valuable content to Reddit (careful with self-promo)"
+    },
+    {
+      "parameters": {
+        "functionCode": "// A/B Testing for content\nconst variants = [\n  {\n    version: 'A',\n    hook: 'emotional',\n    cta: 'soft',\n    emojis: 'high'\n  },\n  {\n    version: 'B',\n    hook: 'data-driven',\n    cta: 'direct',\n    emojis: 'low'\n  }\n];\n\nconst selectedVariant = variants[Math.floor(Math.random() * variants.length)];\n\nreturn [{\n  json: {\n    ...($input.item.json),\n    abTest: selectedVariant,\n    testId: `test_${Date.now()}_${selectedVariant.version}`\n  }\n}];"
+      },
+      "id": "ab-testing-engine",
+      "name": "A/B Testing Engine",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        460,
+        400
+      ],
+      "notes": "Runs A/B tests on content variations"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://hooks.zapier.com/hooks/catch/123456/abcdef/",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "event",
+              "value": "post_published"
+            },
+            {
+              "name": "platform",
+              "value": "={{ $json.platform }}"
+            },
+            {
+              "name": "content",
+              "value": "={{ $json.generatedContent }}"
+            },
+            {
+              "name": "timestamp",
+              "value": "={{ $now.toISO() }}"
+            }
+          ]
+        }
+      },
+      "id": "webhook-notification",
+      "name": "Webhook Notification",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        500
+      ],
+      "notes": "Triggers external automations"
+    }
+  ],
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Platform Router",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Platform Router": {
+      "main": [
+        [
+          {
+            "node": "Content Template Engine",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "A/B Testing Engine",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Content Template Engine": {
+      "main": [
+        [
+          {
+            "node": "AI Content Generator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Content Generator": {
+      "main": [
+        [
+          {
+            "node": "Platform Filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Platform Filter": {
+      "main": [
+        [
+          {
+            "node": "Post to Twitter/X",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Post to Instagram",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Post to LinkedIn",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Post to TikTok",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Post to Twitter/X": {
+      "main": [
+        [
+          {
+            "node": "Log to Google Sheets",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Notify Slack",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Post to Instagram": {
+      "main": [
+        [
+          {
+            "node": "Log to Google Sheets",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Notify Slack",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Post to LinkedIn": {
+      "main": [
+        [
+          {
+            "node": "Log to Google Sheets",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Notify Slack",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Post to TikTok": {
+      "main": [
+        [
+          {
+            "node": "Log to Google Sheets",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Notify Slack",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log to Google Sheets": {
+      "main": [
+        [
+          {
+            "node": "Analytics Aggregator",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Webhook Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analytics Aggregator": {
+      "main": [
+        [
+          {
+            "node": "Evening Report Check",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Evening Report Check": {
+      "main": [
+        [
+          {
+            "node": "Send Daily Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Weekly Check": {
+      "main": [
+        [
+          {
+            "node": "Post to Product Hunt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z",
+      "id": "1",
+      "name": "marketing"
+    },
+    {
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z",
+      "id": "2",
+      "name": "automation"
+    }
+  ],
+  "pinData": {},
+  "versionId": "1"
+}
