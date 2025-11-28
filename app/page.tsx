@@ -4,7 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { ArrowRight, Check, PieChart, TrendingUp, Target, Sparkles, Zap, CreditCard, Menu, X } from 'lucide-react'
+import { ArrowRight, Check, PieChart, TrendingUp, Target, Sparkles, Zap, CreditCard, Menu, X, Star, Users, TrendingDown } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 
 export default function LandingPage() {
@@ -181,6 +181,34 @@ export default function LandingPage() {
           }}
         />
         
+        {/* Floating Icons Animation */}
+        {[
+          { Icon: Sparkles, delay: 0, x: 100, y: 50 },
+          { Icon: TrendingUp, delay: 1, x: 200, y: 150 },
+          { Icon: Target, delay: 2, x: 300, y: 80 },
+          { Icon: Zap, delay: 1.5, x: 150, y: 200 },
+          { Icon: Star, delay: 0.5, x: 250, y: 120 },
+        ].map((item, index) => (
+          <motion.div
+            key={index}
+            className="absolute hidden lg:block"
+            style={{ left: `${item.x}px`, top: `${item.y}px` }}
+            animate={{
+              y: [0, -20, 0],
+              rotate: [0, 10, -10, 0],
+              opacity: [0.3, 0.6, 0.3],
+            }}
+            transition={{
+              duration: 4,
+              delay: item.delay,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+          >
+            <item.Icon className="h-6 w-6 text-blue-400/40" />
+          </motion.div>
+        ))}
+        
         <div className="grid md:grid-cols-2 gap-12 items-center relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -341,10 +369,10 @@ export default function LandingPage() {
       <section className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
           {[
-            { number: "10K+", label: "Active Users" },
-            { number: "€2.5M", label: "Money Tracked" },
-            { number: "15K+", label: "Goals Reached" },
-            { number: "4.8★", label: "User Rating" }
+            { number: "10K+", label: "Active Users", icon: Users },
+            { number: "€2.5M", label: "Money Tracked", icon: TrendingUp },
+            { number: "15K+", label: "Goals Reached", icon: Target },
+            { number: "4.8★", label: "User Rating", icon: Star }
           ].map((stat, index) => (
             <motion.div
               key={index}
@@ -352,12 +380,33 @@ export default function LandingPage() {
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="text-center"
+              whileHover={{ scale: 1.05, y: -5 }}
+              className="text-center relative group"
             >
-              <div className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-2">
-                {stat.number}
+              <motion.div
+                className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity"
+              />
+              <div className="relative bg-slate-900/30 border border-slate-800 rounded-xl p-6 group-hover:border-blue-500/30 transition-all">
+                <motion.div
+                  initial={{ scale: 0 }}
+                  whileInView={{ scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: index * 0.1 + 0.2, type: "spring" }}
+                  className="inline-flex items-center justify-center w-12 h-12 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-full mb-3"
+                >
+                  <stat.icon className="h-6 w-6 text-blue-400" />
+                </motion.div>
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: index * 0.1 + 0.3 }}
+                  className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-2"
+                >
+                  {stat.number}
+                </motion.div>
+                <div className="text-slate-400 text-sm">{stat.label}</div>
               </div>
-              <div className="text-slate-400 text-sm">{stat.label}</div>
             </motion.div>
           ))}
         </div>
@@ -410,16 +459,35 @@ export default function LandingPage() {
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: feature.delay }}
               whileHover={{ y: -8, transition: { duration: 0.3 } }}
+              className="relative group"
             >
-              <Card className="bg-slate-900/50 border-slate-700 h-full hover:border-slate-600 transition-all">
+              {/* Glow effect on hover */}
+              <motion.div
+                className="absolute -inset-0.5 bg-gradient-to-r from-blue-500/0 via-purple-500/0 to-blue-500/0 rounded-lg blur opacity-0 group-hover:opacity-30 transition-opacity"
+                animate={{
+                  backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'],
+                }}
+                transition={{
+                  duration: 3,
+                  repeat: Infinity,
+                  ease: "linear"
+                }}
+                style={{
+                  backgroundSize: '200% 200%',
+                }}
+              />
+              <Card className="bg-slate-900/50 border-slate-700 h-full hover:border-slate-600 transition-all relative">
                 <CardHeader>
                   <motion.div
                     whileHover={{ rotate: 360, scale: 1.1 }}
                     transition={{ duration: 0.6 }}
+                    className="inline-block"
                   >
-                    <feature.icon className={`h-12 w-12 text-${feature.color}-500 mb-4`} />
+                    <div className={`p-3 bg-${feature.color}-500/10 rounded-xl inline-block`}>
+                      <feature.icon className={`h-12 w-12 text-${feature.color}-500`} />
+                    </div>
                   </motion.div>
-                  <CardTitle className="text-white">{feature.title}</CardTitle>
+                  <CardTitle className="text-white mt-4">{feature.title}</CardTitle>
                   <CardDescription className="text-slate-400">
                     {feature.description}
                   </CardDescription>
@@ -684,7 +752,23 @@ export default function LandingPage() {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
             whileHover={{ y: -8, scale: 1.02 }}
+            className="relative"
           >
+            {/* Animated border gradient */}
+            <motion.div
+              className="absolute -inset-0.5 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-lg blur opacity-75"
+              animate={{
+                backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'],
+              }}
+              transition={{
+                duration: 3,
+                repeat: Infinity,
+                ease: "linear"
+              }}
+              style={{
+                backgroundSize: '200% 200%',
+              }}
+            />
             <Card className="border-blue-500 bg-slate-900/90 relative overflow-hidden h-full">
               <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-purple-500/20 -z-10"></div>
               <motion.div
@@ -695,6 +779,18 @@ export default function LandingPage() {
                 }}
                 transition={{
                   duration: 4,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+              />
+              <motion.div
+                className="absolute -bottom-20 -left-20 w-40 h-40 bg-purple-500/20 rounded-full blur-3xl"
+                animate={{
+                  scale: [1, 1.3, 1],
+                  opacity: [0.2, 0.5, 0.2],
+                }}
+                transition={{
+                  duration: 5,
                   repeat: Infinity,
                   ease: "easeInOut"
                 }}
@@ -820,12 +916,32 @@ export default function LandingPage() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.6 }}
+              className="relative"
             >
               <Link href="/auth/sign-up">
-                <Button size="lg" className="group w-full sm:w-auto">
-                  Get started for free
-                  <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-                </Button>
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="relative inline-block"
+                >
+                  {/* Shimmer effect */}
+                  <motion.div
+                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent rounded-lg"
+                    animate={{
+                      x: ['-200%', '200%'],
+                    }}
+                    transition={{
+                      duration: 2,
+                      repeat: Infinity,
+                      repeatDelay: 1,
+                      ease: "easeInOut"
+                    }}
+                  />
+                  <Button size="lg" className="group w-full sm:w-auto relative overflow-hidden">
+                    <span className="relative z-10">Get started for free</span>
+                    <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform relative z-10" />
+                  </Button>
+                </motion.div>
               </Link>
             </motion.div>
           </div>
