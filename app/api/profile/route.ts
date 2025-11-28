@@ -66,11 +66,27 @@ export async function GET() {
       )
     }
 
-    const profile = await prisma.profile.findUnique({
-      where: { userId: session.user.id }
-    })
+    // Get both user and profile data
+    const [user, profile] = await Promise.all([
+      prisma.user.findUnique({
+        where: { id: session.user.id },
+        select: {
+          plan: true,
+          monthlyAiRequests: true,
+          aiRequestsResetAt: true,
+        }
+      }),
+      prisma.profile.findUnique({
+        where: { userId: session.user.id }
+      })
+    ])
 
-    return NextResponse.json(profile, { status: 200 })
+    return NextResponse.json({
+      ...profile,
+      plan: user?.plan || 'FREE',
+      monthlyAiRequests: user?.monthlyAiRequests || 0,
+      aiRequestsResetAt: user?.aiRequestsResetAt,
+    }, { status: 200 })
   } catch (error) {
     console.error('Profile fetch error:', error)
     return NextResponse.json(
