@@ -205,13 +205,25 @@ export default function CoachPage() {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ messages })
         })
+        
+        // Refresh conversations list to update timestamp
+        const conversationsRes = await fetch('/api/coach/conversations')
+        if (conversationsRes.ok) {
+          const data = await conversationsRes.json()
+          setConversations(data.conversations || [])
+        }
       }
     } catch (error) {
       console.error('Failed to save conversation:', error)
     }
   }
 
-  const handleNewChat = () => {
+  const handleNewChat = async () => {
+    // Save current conversation before starting new one
+    if (messages.length > 0 && currentConversationId) {
+      await saveConversation()
+    }
+    
     setMessages([])
     setCurrentConversationId(null)
     setSidebarOpen(false)
@@ -219,6 +231,11 @@ export default function CoachPage() {
 
   const handleLoadConversation = async (id: string) => {
     try {
+      // Save current conversation before switching
+      if (messages.length > 0 && currentConversationId && currentConversationId !== id) {
+        await saveConversation()
+      }
+      
       const res = await fetch(`/api/coach/conversations/${id}`)
       if (res.ok) {
         const data = await res.json()
