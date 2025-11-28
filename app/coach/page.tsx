@@ -279,11 +279,11 @@ export default function CoachPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 flex flex-col">
+    <div className="h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 flex flex-col overflow-hidden">
       <Header />
 
       {/* Main Content */}
-      <main className="flex-1 container mx-auto px-4 py-6 flex gap-4 max-w-7xl">
+      <main className="flex-1 flex gap-4 overflow-hidden px-4 py-4 max-w-full">
         {/* Mobile Menu Button */}
         <button
           onClick={() => setSidebarOpen(!sidebarOpen)}
@@ -351,10 +351,10 @@ export default function CoachPage() {
         </div>
 
         {/* Chat Area */}
-        <div className="flex-1 flex flex-col min-w-0">
+        <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
         {/* Usage Indicator for Free Users */}
         {userPlan === 'FREE' && (
-          <div className="mb-4 p-4 bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-blue-500/20 rounded-lg">
+          <div className="mb-3 p-3 bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-blue-500/20 rounded-lg flex-shrink-0">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <Sparkles className="h-5 w-5 text-blue-400" />
@@ -386,9 +386,9 @@ export default function CoachPage() {
         )}
 
         {/* Chat Container - Full Height */}
-        <div className="flex-1 bg-slate-900/50 border border-slate-700 rounded-lg flex flex-col overflow-hidden">
+        <div className="flex-1 bg-slate-900/50 border border-slate-700 rounded-lg flex flex-col overflow-hidden min-h-0">
             {/* Messages */}
-            <div className="flex-1 overflow-y-auto space-y-4 p-6">
+            <div className="flex-1 overflow-y-auto space-y-4 p-4 md:p-6">
               {messages.length === 0 ? (
                 <div className="h-full flex flex-col items-center justify-center text-center">
                   <Sparkles className="h-20 w-20 text-purple-500 mb-6" />
@@ -472,8 +472,8 @@ export default function CoachPage() {
             </div>
 
             {/* Input */}
-            <div className="p-6 border-t border-slate-700">
-              <div className="flex gap-3">
+            <div className="p-4 md:p-6 border-t border-slate-700 flex-shrink-0">
+              <div className="flex gap-2 md:gap-3">
                 <Input
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
@@ -482,7 +482,7 @@ export default function CoachPage() {
                   className="flex-1 bg-slate-800 border-slate-700 text-white text-base h-12"
                   disabled={isLoading}
                 />
-                <Button onClick={handleSend} disabled={isLoading || !input.trim()} className="h-12 px-6">
+                <Button onClick={handleSend} disabled={isLoading || !input.trim()} className="h-12 px-4 md:px-6">
                   {isLoading ? (
                     <Loader2 className="h-5 w-5 animate-spin" />
                   ) : (
