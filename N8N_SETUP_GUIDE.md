@@ -2,13 +2,12 @@
 
 ## 📋 Overview
 
-This n8n workflow automates your entire marketing process:
-- ✅ **Auto-generates** content with AI
-- ✅ **Posts to 6 platforms** (Twitter, Instagram, LinkedIn, TikTok, Product Hunt, Reddit)
-- ✅ **Tracks analytics** in Google Sheets
-- ✅ **Sends reports** via email & Slack
-- ✅ **A/B tests** content variations
+This n8n workflow automates your social media posting:
+- ✅ **Auto-generates** content from templates
+- ✅ **Posts to 3 platforms** (Twitter, Instagram, TikTok)
 - ✅ **Runs 3x daily** (9AM, 3PM, 9PM)
+- ✅ **No reporting** - just posting
+- ✅ **Simple & clean** - easy to manage
 
 ---
 
@@ -44,66 +43,25 @@ Access at: `http://localhost:5678`
 
 ## 🔑 Required API Keys & Credentials
 
-### 1. OpenAI (For AI Content Generation)
-- Go to: https://platform.openai.com/api-keys
-- Create new key
-- Add to n8n: Credentials → OpenAI API
-- Cost: ~$0.01 per post
-
-### 2. Twitter/X API
+### 1. Twitter/X API
 - Go to: https://developer.twitter.com/
 - Create app → Get API keys
 - Add to n8n: Credentials → Twitter OAuth1
 - Need: API Key, API Secret, Access Token, Access Secret
 
-### 3. Instagram API
+### 2. Instagram API
 - Go to: https://developers.facebook.com/
 - Create app → Instagram Basic Display
 - Add to n8n: Credentials → Instagram API
 - Need: Access Token
 
-### 4. LinkedIn API
-- Go to: https://www.linkedin.com/developers/
-- Create app → Request access to Marketing API
-- Add to n8n: Credentials → LinkedIn OAuth2
-- Need: Client ID, Client Secret
-
-### 5. TikTok API
+### 3. TikTok API
 - Go to: https://developers.tiktok.com/
 - Apply for API access (takes 1-2 weeks)
-- Add to n8n: Credentials → HTTP Header Auth
-- Need: Access Token
+- Add to n8n: Credentials → TikTok OAuth2
+- Need: Client Key, Client Secret
 
-### 6. Google Sheets API
-- Go to: https://console.cloud.google.com/
-- Enable Google Sheets API
-- Create OAuth2 credentials
-- Add to n8n: Credentials → Google Sheets OAuth2
-- Need: Client ID, Client Secret
-
-### 7. Slack API
-- Go to: https://api.slack.com/apps
-- Create app → Add Bot Token Scopes
-- Add to n8n: Credentials → Slack API
-- Need: Bot Token
-
-### 8. Email (SMTP)
-- Use your email provider's SMTP settings
-- Gmail: smtp.gmail.com:587
-- Add to n8n: Credentials → SMTP
-- Need: Host, Port, Username, Password
-
-### 9. Product Hunt API (Optional)
-- Go to: https://api.producthunt.com/
-- Create app → Get API key
-- Add to n8n: Credentials → HTTP Header Auth
-- Need: API Key
-
-### 10. Reddit API (Optional)
-- Go to: https://www.reddit.com/prefs/apps
-- Create app → Get credentials
-- Add to n8n: Credentials → HTTP Header Auth
-- Need: Client ID, Client Secret
+**That's it!** Only 3 credentials needed.
 
 ---
 
@@ -129,37 +87,15 @@ To change:
 3. Save
 ```
 
-### Step 2: Configure Google Sheets
+### Step 2: Customize Content Templates (Optional)
 ```
-1. Create new Google Sheet
-2. Name it "Marketing Analytics"
-3. Create sheet called "Analytics"
-4. Add headers: Timestamp, Platform, Content, Type, Status
-5. Copy Sheet ID from URL
-6. Update "Log to Google Sheets" node
-```
-
-### Step 3: Update Slack Channel
-```
-1. Open "Notify Slack" node
-2. Change channel: #marketing (or your channel)
-3. Save
-```
-
-### Step 4: Update Email Recipients
-```
-1. Open "Send Daily Report" node
-2. Change "to" field to your email
-3. Save
-```
-
-### Step 5: Customize Content Templates
-```
-1. Open "Content Template Engine" node
-2. Edit templates array
+1. Open "Content Generator" node
+2. Edit templates object
 3. Add your own content ideas
 4. Save
 ```
+
+**That's it!** You're ready to go.
 
 ---
 
@@ -169,23 +105,15 @@ To change:
 ```
 Schedule Trigger (3x daily)
     ↓
-Platform Router (determines platforms)
+Platform Router (creates 3 targets: Twitter, Instagram, TikTok)
     ↓
-Content Template Engine (generates base content)
+Content Generator (picks random template based on time)
     ↓
-AI Content Generator (enhances with GPT-4)
+Platform Filters (routes to correct platform)
     ↓
-Platform Filter (routes to correct platform)
+Post to Platform (Twitter, Instagram, TikTok)
     ↓
-Post to Platform (Twitter, IG, LinkedIn, TikTok)
-    ↓
-Log to Google Sheets (analytics)
-    ↓
-Notify Slack (team notification)
-    ↓
-Analytics Aggregator (daily metrics)
-    ↓
-Send Daily Report (9PM email)
+Done! ✅
 ```
 
 ### Content Types by Time:
@@ -195,96 +123,23 @@ Send Daily Report (9PM email)
 
 ### Platform-Specific Formatting:
 - **Twitter**: 280 chars + link
-- **Instagram**: Long form + hashtags
-- **LinkedIn**: Professional tone + company info
-- **TikTok**: Short caption + video
-
----
-
-## 📊 Analytics & Reporting
-
-### Google Sheets Tracking:
-- Every post logged automatically
-- Columns: Timestamp, Platform, Content, Type, Status
-- Use for: Performance analysis, content audit
-
-### Daily Email Report (9PM):
-- Total reach across all platforms
-- Total engagement (likes + comments + shares)
-- Platform breakdown
-- Engagement rates
-
-### Slack Notifications:
-- Real-time post confirmations
-- Includes: Platform, content preview, timestamp
-- Channel: #marketing (customizable)
-
----
-
-## 🧪 A/B Testing
-
-The workflow includes A/B testing:
-
-**Variant A:**
-- Emotional hooks
-- Soft CTAs
-- High emoji usage
-
-**Variant B:**
-- Data-driven hooks
-- Direct CTAs
-- Low emoji usage
-
-**Tracking:**
-- Each post gets unique test ID
-- Logged in Google Sheets
-- Compare performance after 1 week
+- **Instagram**: Long form + 8 hashtags
+- **TikTok**: Short caption + 5 hashtags (no link)
 
 ---
 
 ## 🎨 Content Templates
 
-### Built-in Templates:
+### Built-in Templates (5 per type):
 
-1. **Budgeting Tips**
-   - Quick money hacks
-   - Student-focused advice
-   - Actionable tips
+1. **Budgeting Tips** - Quick money hacks for students
+2. **Subscription Hacks** - Cost awareness & cancellation prompts
+3. **Savings Goals** - Goal breakdowns & success stories
+4. **Student Money** - Budget reality checks
+5. **App Features** - AI coach & feature highlights
+6. **User Testimonials** - Real user quotes & social proof
 
-2. **Subscription Hacks**
-   - Cost awareness
-   - Cancellation prompts
-   - Yearly cost reveals
-
-3. **Savings Goals**
-   - Goal breakdowns
-   - Success stories
-   - Monthly plans
-
-4. **Student Money**
-   - Budget reality checks
-   - Income/expense examples
-   - Relatable scenarios
-
-5. **App Features**
-   - AI coach highlights
-   - Chart visualizations
-   - Goal tracking
-
-6. **User Testimonials**
-   - Real user quotes
-   - Success metrics
-   - Social proof
-
-7. **Money Mistakes**
-   - Common errors
-   - Solutions
-   - Before/after
-
-8. **Financial Clarity**
-   - Simple formulas
-   - No-jargon explanations
-   - Value propositions
+**Total: 30 unique posts** that rotate randomly!
 
 ---
 
@@ -369,15 +224,11 @@ const templates = {
 
 | Service | Cost | Notes |
 |---------|------|-------|
-| n8n Cloud | $20/mo | Or self-host for free |
-| OpenAI API | $3-5/mo | ~300 posts/month |
+| n8n Cloud | $20/mo | Or self-host for FREE |
 | Twitter API | Free | Basic tier |
 | Instagram API | Free | Basic Display |
-| LinkedIn API | Free | Standard access |
 | TikTok API | Free | Standard access |
-| Google Sheets | Free | Within limits |
-| Slack | Free | Standard plan |
-| **Total** | **$23-25/mo** | Or $3-5 if self-hosted |
+| **Total** | **$20/mo** | Or **$0** if self-hosted! |
 
 ---
 
