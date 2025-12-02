@@ -480,6 +480,134 @@ STYLE:
 
 ---
 
+## 🎯 Video 8: The €1,000 Question
+
+**Duration**: 12 seconds  
+**Style**: Mind-blowing reveal, dramatic  
+**Hook**: "Where did €1,000 go?"
+
+### Detailed Prompt:
+```
+Create a 12-second vertical video (9:16 aspect ratio) with a dramatic, eye-opening aesthetic:
+
+SCENE 1 (0-2s):
+- Black screen with bold white text appearing: "Where did €1,000 go?"
+- Text animation: Each word fades in with a slight shake/glitch effect
+- Background: Pure black (#000000) with subtle noise texture
+- Font: Montserrat Black, 80pt, white (#FFFFFF)
+- Sound: Deep bass drop, dramatic tension sound
+- Effect: Screen slightly vibrates with text
+
+SCENE 2 (2-5s):
+- Show 3D animated coins falling and disappearing into a black void
+- Coins are gold/yellow with euro symbols (€)
+- Each coin that falls shows a subscription logo: Netflix, Spotify, Gym, Disney+
+- Background: Dark gradient (black #000000 to dark purple #1E1B4B)
+- Animation: Coins fall from top, spin, and fade into void with particle effects
+- Sound: Coin drop sounds (cha-ching) getting faster and faster
+- Effect: Motion blur on falling coins, glowing trails
+
+SCENE 3 (5-7s):
+- Calculator display appears in center of screen
+- Numbers rapidly count up showing math:
+  €9.99 + €12.99 + €29.99 + €14.99 + €19.99 + ...
+- Numbers are bright cyan (#06B6D4) on dark background
+- Background: Dark blue (#0A0E27) with animated grid lines
+- Animation: Numbers flash and add up with digital counter effect
+- Font: JetBrains Mono, 64pt, monospace style
+- Sound: Calculator beep sounds, rapid counting
+- Effect: Digital glitch effect on numbers
+
+SCENE 4 (7-9s):
+- Large red text appears with impact: "= €1,087/year"
+- Text has dramatic entrance with screen shake
+- Background: Dark red gradient (#7F1D1D to #1E1B4B) with warning symbols
+- Animation: Number zooms in from small to large, slight bounce
+- Font: Montserrat Black, 96pt, red (#EF4444)
+- Sound: Error/alarm sound, dramatic impact
+- Effect: Screen flash white for 0.1s on impact, then red glow around text
+
+SCENE 5 (9-11s):
+- Phone screen mockup slides in from right showing MoneyMap app
+- App displays clean dashboard with subscription breakdown
+- Highlight feature: Total yearly cost prominently shown
+- Background: Smooth transition from dark red to blue gradient (#1E293B to #3B82F6)
+- Animation: Phone slides in smoothly, UI elements pop in sequentially
+- Screen shows: "Total: €1,087/year" with option to "Cancel unused"
+- Sound: Smooth whoosh, UI pop sounds
+- Effect: Phone has subtle 3D depth, soft shadow
+
+SCENE 6 (11-12s):
+- MoneyMap logo appears center screen with glow effect
+- Text below logo: "Know where it goes"
+- Website URL: "getmoneymap.org"
+- Background: Clean gradient (blue #3B82F6 to purple #8B5CF6) with subtle particles floating
+- Animation: Logo materializes with particle effect, glows and pulses once
+- Font: Logo (brand font), tagline (Inter Bold, 36pt, white)
+- Sound: Success chime, satisfying "ding"
+- Effect: Soft glow around logo, particles drift upward slowly
+- Final frame holds for 1 second
+
+OVERALL AUDIO:
+- Background music: Dark, dramatic electronic music (110 BPM)
+- Music builds tension from 0-7s, then releases to uplifting at 9s
+- Sound effects: Bass drop, coin drops, calculator beeps, alarm, whoosh, UI pops, success chime
+- Volume: Music at -18dB, effects at -12dB for clarity
+- No voiceover needed (visual + text-driven for maximum impact)
+
+OVERALL STYLE:
+- Color palette: 
+  * Dark: Black (#000000), Dark Blue (#0A0E27), Dark Purple (#1E1B4B)
+  * Accent: Cyan (#06B6D4), Blue (#3B82F6), Purple (#8B5CF6)
+  * Alert: Red (#EF4444), Dark Red (#7F1D1D)
+  * Highlight: Gold (#F59E0B), White (#FFFFFF)
+- Typography: 
+  * Headlines: Montserrat Black (bold, impactful)
+  * Numbers: JetBrains Mono (technical, precise)
+  * Body: Inter Bold (clean, modern)
+- Transitions: Quick cuts with whoosh effects, no fade transitions
+- Effects: Glitch, glow, particles, motion blur, screen shake
+- Overall vibe: Dramatic, eye-opening, slightly shocking, then empowering
+- Pacing: Fast and intense (0-7s), smooth and solution-focused (7-12s)
+- Mood: "Oh no!" → "Oh, I can fix this!"
+
+TECHNICAL NOTES:
+- Ensure all text is readable on mobile screens (minimum 48pt)
+- High contrast throughout (white/cyan on dark backgrounds)
+- Particle effects should be subtle, not distracting
+- Phone mockup should look realistic (use actual MoneyMap UI if possible)
+- Logo should be crisp and clear in final frame
+- Export at 1080x1920, 30fps, H.264 codec
+- Keep file size under 50MB for optimal TikTok upload
+```
+
+**Caption Suggestions:**
+
+**Short (TikTok):**
+```
+€1,000 disappeared and you didn't even notice 💸
+```
+
+**Medium (Instagram):**
+```
+Small subscriptions = €1,000/year gone 😱
+
+MoneyMap shows you EVERYTHING.
+
+getmoneymap.org
+```
+
+**With Hashtags:**
+```
+Where did €1,000 go? Into subscriptions you forgot about 💸
+
+Track it all with MoneyMap 📊
+
+#moneytips #budgeting #financetok #studentmoney #savingmoney
+```
+
+---
+
 ## 🛠️ Technical Specifications
 
 ### For All Videos:
