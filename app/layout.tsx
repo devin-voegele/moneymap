@@ -5,6 +5,7 @@ import Providers from '@/components/Providers'
 import { Toaster } from 'sonner'
 import NavigationProgress from '@/components/NavigationProgress'
 import { ThemeProvider } from '@/components/ThemeProvider'
+import ServiceWorkerRegistration from '@/components/ServiceWorkerRegistration'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -90,8 +91,9 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <link rel="manifest" href="/manifest.json" />
-        <link rel="icon" href="/favicon.ico" sizes="any" />
-        <link rel="apple-touch-icon" href="/icon-192.png" />
+        <link rel="icon" type="image/png" sizes="196x196" href="/favicon-196.png" />
+        <link rel="apple-touch-icon" href="/apple-icon-180.png" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="theme-color" content="#3b82f6" />
       </head>
       <body className={inter.className}>
@@ -104,6 +106,7 @@ export default function RootLayout({
           <NavigationProgress />
           <Providers>{children}</Providers>
           <Toaster position="top-right" richColors />
+          <ServiceWorkerRegistration />
         </ThemeProvider>
       </body>
     </html>
